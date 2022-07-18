@@ -125,9 +125,12 @@ class Atm : Fragment() {
         binding.buttonAssure.setOnClickListener {
             if (serviceSelect != null && districtSelect != null && countySelect != null) {
                 startActivity(Intent(context, MainActivity2::class.java).apply {
-                    putExtra("service", serviceSelect)
-                    putExtra("district", districtSelect)
-                    putExtra("county", countySelect)
+                    var passList= hashMapOf("service" to serviceSelect
+                                        ,"district" to districtSelect
+                                        ,"county" to countySelect)
+                    val box=Bundle()
+                    box.putSerializable("list",passList)
+                    putExtra("list",box)
                 })
             }
 

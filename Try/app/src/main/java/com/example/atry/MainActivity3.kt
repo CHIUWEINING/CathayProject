@@ -16,10 +16,10 @@ class MainActivity3 : AppCompatActivity() {
         binding = ActivityMain3Binding.inflate(layoutInflater)
         setContentView(binding.root)
         val test="test1212"
-        val bundle=intent.extras
-        binding.name.text=bundle?.getString("name")
-        binding.addr.text=bundle?.getString("addr")
-        binding.phone.text=bundle?.getString("phone")
+        var list= intent.getBundleExtra("list")?.getSerializable("list") as HashMap<String,String>
+        binding.name.text=list["name"]
+        binding.addr.text=list["addr"]
+        binding.phone.text=list["phone"]
         binding.test.setOnClickListener {
             val bundle1=Bundle()
             bundle1.putString("test",test)

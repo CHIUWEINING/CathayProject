@@ -99,8 +99,11 @@ class Bank : Fragment() {
         binding.buttonAssure.setOnClickListener {
             if ( districtSelect != null && countySelect != null) {
                 startActivity(Intent(context, MainActivity2::class.java).apply {
-                    putExtra("district", districtSelect)
-                    putExtra("county", countySelect)
+                    var passList= hashMapOf("district" to districtSelect
+                        ,"county" to countySelect)
+                    val box=Bundle()
+                    box.putSerializable("list",passList)
+                    putExtra("list",box)
                 })
             }
         }

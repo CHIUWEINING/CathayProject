@@ -23,6 +23,7 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMain2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+        var list= intent.getBundleExtra("list")?.getSerializable("list") as HashMap<String,String>
 
         fun expandCollapseSheet(){
             if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -59,12 +60,13 @@ class MainActivity2 : AppCompatActivity() {
 
             override fun onItemClick(item: ItemsViewModel) {
                 Toast.makeText(this@MainActivity2,"You click number ${item.name}", Toast.LENGTH_SHORT).show()
-                val bundle = Bundle()
-                bundle.putString("name", item.name)
-                bundle.putString("addr",item.addr)
-                bundle.putString("phone",item.phone)
+                var passList= hashMapOf("name" to item.name
+                    ,"addr" to item.addr
+                    ,"phone" to item.phone)
+                val box=Bundle()
+                box.putSerializable("list",passList)
                 val intent=Intent(this@MainActivity2,MainActivity3::class.java)
-                intent.putExtras(bundle)
+                intent.putExtra("list",box)
                 startActivityForResult(intent,1)
 
             }
@@ -110,7 +112,7 @@ class MainActivity2 : AppCompatActivity() {
         filterDialog
             .setConfirm(object:FilterDialog.IOnConfirmListener{
                 override fun onConfirm(checkArray:Array<Boolean>) {
-                    
+
                     filterDialog.dismiss()
                 }
             })
