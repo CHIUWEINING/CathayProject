@@ -37,6 +37,9 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var binding: ActivityMain2Binding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private val BASE_URL="https://jsonplaceholder.typicode.com/"
+    //"https://172.25.137.68:80/"
+    //172.25.137.68
+    //localhost:80/BM/find/25.038536533061507/121.56911953097298/0.2
     private val bicycleIcon: BitmapDescriptor by lazy {
         val color = ContextCompat.getColor(this, R.color.black)
         BitmapHelper.vectorToBitmap(this, R.drawable.list_icon, color)

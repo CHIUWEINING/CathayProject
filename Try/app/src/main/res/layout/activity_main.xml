@@ -15,7 +15,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="168dp"
             android:layout_marginTop="84dp"
+            android:fontFamily="sans-serif"
             android:text="@string/Topic"
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
