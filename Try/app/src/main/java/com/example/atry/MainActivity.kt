@@ -1,21 +1,11 @@
 package com.example.atry
 
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
-import androidx.core.view.marginTop
-import androidx.core.view.setMargins
-import androidx.fragment.app.Fragment
 import com.example.atry.databinding.ActivityMainBinding
-import com.google.android.material.tabs.TabLayout
+import com.example.atry.fragment.PageAdapter
 //import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.tabs.TabLayoutMediator
-import android.content.Intent as Intent1
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

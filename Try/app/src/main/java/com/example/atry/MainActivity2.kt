@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
@@ -25,11 +26,17 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.clustering.ClusterManager
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity2 : AppCompatActivity() {
     private lateinit var binding: ActivityMain2Binding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private val BASE_URL="https://jsonplaceholder.typicode.com/"
     private val bicycleIcon: BitmapDescriptor by lazy {
         val color = ContextCompat.getColor(this, R.color.black)
         BitmapHelper.vectorToBitmap(this, R.drawable.list_icon, color)
@@ -41,6 +48,8 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMain2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Google map
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)as? SupportMapFragment
         mapFragment?.getMapAsync { googleMap ->
             //addMarkers(googleMap)
@@ -78,32 +87,7 @@ class MainActivity2 : AppCompatActivity() {
         }
 
         binding.persistentBottomSheet.recyclerview.layoutManager= LinearLayoutManager(this)
-        val data = ArrayList<ItemsViewModel>()
-
-        for (i in 1..20) {
-            data.add(ItemsViewModel( "Item " + i,"phone:"+i,"address:"+i))
-        }
-
-        // This will pass the ArrayList to our Adapter
-        val adapter = CustomAdapter(data)
-
-        // Setting the Adapter with the recyclerview
-        binding.persistentBottomSheet.recyclerview.adapter = adapter
-        adapter.setOnItemCLickListener(object:CustomAdapter.onItemClickListener{
-
-            override fun onItemClick(item: ItemsViewModel) {
-                Toast.makeText(this@MainActivity2,"You click number ${item.name}", Toast.LENGTH_SHORT).show()
-                var passList= hashMapOf("name" to item.name
-                    ,"addr" to item.addr
-                    ,"phone" to item.phone)
-                val box=Bundle()
-                box.putSerializable("list",passList)
-                val intent=Intent(this@MainActivity2,MainActivity3::class.java)
-                intent.putExtra("list",box)
-                startActivityForResult(intent,1)
-
-            }
-        })
+        getMydata()
         bottomSheetBehavior = BottomSheetBehavior.from( binding.persistentBottomSheet.persistentBottomSheet)
         bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback(){
             override fun onStateChanged(bottomSheet: View, state: Int) {
@@ -208,5 +192,43 @@ class MainActivity2 : AppCompatActivity() {
     }
 
 
+    private fun getMydata() {
+        val retrofitBuilder = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .build()
+            .create(ApiInterface::class.java)
 
+        val retrofitData= retrofitBuilder.getData()
+        retrofitData.enqueue(object:Callback<List<MyDataItem>?>{
+            override fun onResponse(
+                call: Call<List<MyDataItem>?>,
+                response: Response<List<MyDataItem>?>
+            ) {
+                val responseBody=response.body()!!
+                val myAdapter=CustomAdapter(responseBody)
+                binding.persistentBottomSheet.recyclerview.adapter=myAdapter
+                myAdapter.setOnItemCLickListener(object:CustomAdapter.onItemClickListener{
+
+                    override fun onItemClick(item: MyDataItem) {
+                        Toast.makeText(this@MainActivity2,"You click number ${item.id}", Toast.LENGTH_SHORT).show()
+                        var passList= hashMapOf("name" to item.body
+                            ,"addr" to item.title
+                            ,"phone" to item.id.toString())
+                        val box=Bundle()
+                        box.putSerializable("list",passList)
+                        val intent=Intent(this@MainActivity2,MainActivity3::class.java)
+                        intent.putExtra("list",box)
+                        startActivityForResult(intent,1)
+
+                    }
+                })
+            }
+
+            override fun onFailure(call: Call<List<MyDataItem>?>, t: Throwable) {
+                Log.d("MainActivity3","onFailure"+t.message)
+            }
+
+        })
+    }
 }

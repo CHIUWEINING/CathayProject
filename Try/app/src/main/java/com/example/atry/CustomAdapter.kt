@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
 
 
-class CustomAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>()  {
+class CustomAdapter(private val mList: List<MyDataItem>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>()  {
     private lateinit var mListener:onItemClickListener
     interface onItemClickListener{
-        fun onItemClick(item: ItemsViewModel)
+        fun onItemClick(item: MyDataItem)
     }
     fun setOnItemCLickListener(listener:onItemClickListener){
         mListener=listener
@@ -38,9 +38,9 @@ class CustomAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adap
         //holder.imageView.setImageResource(ItemsViewModel.image)
 
         // sets the text to the textview from our itemHolder class
-        holder.name.text = itemsViewModel.name
-        holder.phone.text= itemsViewModel.phone
-        holder.addr.text= itemsViewModel.addr
+        holder.name.text = itemsViewModel.body
+        holder.phone.text= itemsViewModel.id.toString()
+        holder.addr.text= itemsViewModel.title
 
 //        holder.itemView.context.getString(R.string.app_name)
     }
@@ -64,7 +64,7 @@ class CustomAdapter(private val mList: List<ItemsViewModel>) : RecyclerView.Adap
 //                listener.onItemClick(bindingAdapterPosition)
 //            }
 //        }
-        fun setData(data:ItemsViewModel){
+        fun setData(data:MyDataItem){
 //            textView.context.getString()
             itemView.setOnClickListener {
                 listener.onItemClick(data)
