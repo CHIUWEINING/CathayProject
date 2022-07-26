@@ -1,0 +1,94 @@
+[
+    {
+        "id": "1",
+        "county_name": "臺北市"
+    },
+    {
+        "id": "2",
+        "county_name": "基隆市"
+    },
+    {
+        "id": "3",
+        "county_name": "新北市"
+    },
+    {
+        "id": "4",
+        "county_name": "連江縣"
+    },
+    {
+        "id": "5",
+        "county_name": "宜蘭縣"
+    },
+    {
+        "id": "6",
+        "county_name": "新竹市"
+    },
+    {
+        "id": "7",
+        "county_name": "新竹縣"
+    },
+    {
+        "id": "8",
+        "county_name": "桃園市"
+    },
+    {
+        "id": "9",
+        "county_name": "苗栗縣"
+    },
+    {
+        "id": "10",
+        "county_name": "臺中市"
+    },
+    {
+        "id": "11",
+        "county_name": "彰化縣"
+    },
+    {
+        "id": "12",
+        "county_name": "南投縣"
+    },
+    {
+        "id": "13",
+        "county_name": "嘉義市"
+    },
+    {
+        "id": "14",
+        "county_name": "嘉義縣"
+    },
+    {
+        "id": "15",
+        "county_name": "雲林縣"
+    },
+    {
+        "id": "16",
+        "county_name": "臺南市"
+    },
+    {
+        "id": "17",
+        "county_name": "高雄市"
+    },
+    {
+        "id": "18",
+        "county_name": "南海島"
+    },
+    {
+        "id": "19",
+        "county_name": "澎湖縣"
+    },
+    {
+        "id": "20",
+        "county_name": "金門縣"
+    },
+    {
+        "id": "21",
+        "county_name": "屏東縣"
+    },
+    {
+        "id": "22",
+        "county_name": "臺東縣"
+    },
+    {
+        "id": "23",
+        "county_name": "花蓮縣"
+    }
+]
