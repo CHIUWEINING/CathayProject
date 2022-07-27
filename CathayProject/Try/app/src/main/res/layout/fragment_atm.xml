@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MaterialComponent"
     tools:context=".fragment.AtmFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -55,6 +56,18 @@
             android:textColor="#424242"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinnerDistrict" />
+        <!--<evan.chen.tutorial.loadingbutton.LoadingButton
+            android:id="@+id/buttonAssure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="立即訂購"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerDistrict"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="55dp"
+            tools:ignore="MissingConstraints" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

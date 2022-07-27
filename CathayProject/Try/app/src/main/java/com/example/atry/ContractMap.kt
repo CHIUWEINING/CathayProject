@@ -5,10 +5,11 @@ import retrofit2.Response
 
 interface ContractMap {
     interface IPresenter2{
-        fun getData()
+        fun getData(serviceSelect:String?)
     }
     interface IView2{
-        fun onSuccess(responseBody:List<branchItem>)
+        fun onSuccessBr(responseBody:List<branchItem>)
+        fun onSuccessAtm(responseBody: List<AtmItem>)
         fun onFail(message:String)
     }
 }

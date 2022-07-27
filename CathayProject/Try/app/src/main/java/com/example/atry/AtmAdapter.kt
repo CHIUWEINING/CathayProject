@@ -3,19 +3,16 @@ package com.example.atry
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
 
 
-class CustomAdapter() :
-    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-    var mList: List<branchItem>?=null
+class AtmAdapter() :
+    RecyclerView.Adapter<AtmAdapter.ViewHolder>() {
+    var mList: List<AtmItem>?=null
     private lateinit var mListener: onItemClickListener
     interface onItemClickListener {
-        fun onItemClick(item: branchItem)
+        fun onItemClick(item: AtmItem, view:View)
     }
 
     fun setOnItemCLickListener(listener: onItemClickListener) {
@@ -62,13 +59,13 @@ class CustomAdapter() :
         val phone: TextView = itemView.findViewById(R.id.phone)
         val addr: TextView = itemView.findViewById(R.id.addr)
 
-        fun setData(data: branchItem) {
+        fun setData(data: AtmItem) {
 //            textView.context.getString()
             name.text = "("+data.branchId+")"+data.name
-            phone.text = data.teleNo
-            addr.text = "("+data.zipCode+")"+data.address
+            phone.text = data.kindname
+            addr.text = data.address
             itemView.setOnClickListener {
-                listener.onItemClick(data)
+                listener.onItemClick(data,itemView)
             }
         }
     }

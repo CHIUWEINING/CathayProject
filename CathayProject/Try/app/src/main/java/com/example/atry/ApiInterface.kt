@@ -8,3 +8,7 @@ interface ApiBranch{
     @GET("BM/find/{center_lat}/{center_lng}/{km}")
     fun getData(@Path("center_lat")lat:Double,@Path("center_lng")lng:Double,@Path("km")km:Double):Call<List<branchResponse>>
 }
+interface ApiAtm{
+    @GET("ATM/find/{center_lat}/{center_lng}/{km}")
+    fun getData(@Path("center_lat")lat:Double,@Path("center_lng")lng:Double,@Path("km")km:Double):Call<List<AtmResponse>>
+}
