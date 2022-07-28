@@ -1,21 +1,18 @@
-package evan.chen.tutorial.loadingbutton
+package com.example.atry
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
-import android.util.Log
+import android.os.Build
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import android.widget.Toast
 
-@SuppressLint("ResourceAsColor")
+
 class LoadingDrawable(private val animatedView: View) : Drawable(), Animatable {
 
     private lateinit var animatorSet: AnimatorSet
@@ -37,7 +34,9 @@ class LoadingDrawable(private val animatedView: View) : Drawable(), Animatable {
         paint.isAntiAlias = true
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 10f
-        paint.color = android.R.color.white
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            paint.color=animatedView.context.getColor(R.color.white)
+        }
 
         setupAnimations()
 

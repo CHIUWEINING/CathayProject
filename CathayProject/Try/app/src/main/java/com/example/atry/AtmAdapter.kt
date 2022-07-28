@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class AtmAdapter() :
     RecyclerView.Adapter<AtmAdapter.ViewHolder>() {
-    var mList: List<AtmItem>?=null
+    var mList: MutableList<AtmItem>?=null
     private lateinit var mListener: onItemClickListener
     interface onItemClickListener {
         fun onItemClick(item: AtmItem, view:View)

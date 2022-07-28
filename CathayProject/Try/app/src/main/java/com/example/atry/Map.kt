@@ -23,30 +23,33 @@ import com.example.atry.place.PlacesReader
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.google.maps.android.clustering.ClusterManager
 
 //172.25.137.68
-class Map : AppCompatActivity(),ContractMap.IView2 {
+class Map : AppCompatActivity(), ContractMap.IView2 {
 
-    companion object{
-        const val name_const="name"
-        const val phone_const="phone"
-        const val addr_const="addr"
-        var loading=true
+    companion object {
+        const val name_const = "name"
+        const val phone_const = "phone"
+        const val addr_const = "addr"
+        var loading = true
     }
+
     private lateinit var binding: ActivityMapBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private lateinit var presenter:ContractMap.IPresenter2
+    private lateinit var presenter: ContractMap.IPresenter2
+
     //"https://172.25.138.56:80/"
     //localhost:80/BM/find/25.038536533061507/121.56911953097298/0.2
     private val places: List<Place> by lazy {
         PlacesReader(this).read()
     }
-    private val branchAdapter=BranchAdapter()
-    private val atmAdapter=AtmAdapter()
+    private val branchAdapter = BranchAdapter()
+    private val atmAdapter = AtmAdapter()
     private lateinit var ServiceSelect: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,66 +65,70 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
             onBackPressed()
         }
         binding.toolbar.inflateMenu(R.menu.menu_layout)
-        binding.toolbar.setOnMenuItemClickListener{
+        binding.toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.filter -> showDialog()
             }
             false
         }
-        branchAdapter.setOnItemCLickListener(object:BranchAdapter.onItemClickListener{
+        branchAdapter.setOnItemCLickListener(object : BranchAdapter.onItemClickListener {
             override fun onItemClick(item: branchItem) {
-                var passList= hashMapOf(
+                var passList = hashMapOf(
                     "type" to "br",
-                    "name" to item.name
-                    ,"addr" to item.address
-                    ,"phone" to item.teleNo.toString())
-                val box=Bundle()
-                box.putSerializable("list",passList)
-                val intent=Intent(this@Map,MainActivity3::class.java)
-                intent.putExtra("list",box)
-                startActivityForResult(intent,1)
+                    "name" to item.name, "addr" to item.address, "phone" to item.teleNo.toString()
+                )
+                val box = Bundle()
+                box.putSerializable("list", passList)
+                val intent = Intent(this@Map, MainActivity3::class.java)
+                intent.putExtra("list", box)
+                startActivityForResult(intent, 1)
             }
         })
-        atmAdapter.setOnItemCLickListener(object:AtmAdapter.onItemClickListener{
-            override fun onItemClick(item: AtmItem, view:View) {
-                var passList= hashMapOf(
+        atmAdapter.setOnItemCLickListener(object : AtmAdapter.onItemClickListener {
+            override fun onItemClick(item: AtmItem, view: View) {
+                var passList = hashMapOf(
                     "type" to "atm",
-                    "name" to item.name
-                    ,"addr" to item.address
-                    ,"kindname" to item.kindname)
-                val box=Bundle()
-                box.putSerializable("list",passList)
-                val intent=Intent(this@Map,MainActivity3::class.java)
-                intent.putExtra("list",box)
-                val nameView=view.findViewById<View>(R.id.name)
-                val phoneView=view.findViewById<View>(R.id.phone)
-                val addrView=view.findViewById<View>(R.id.addr)
+                    "name" to item.name, "addr" to item.address, "kindname" to item.kindname
+                )
+                val box = Bundle()
+                box.putSerializable("list", passList)
+                val intent = Intent(this@Map, MainActivity3::class.java)
+                intent.putExtra("list", box)
+                val nameView = view.findViewById<View>(R.id.name)
+                val phoneView = view.findViewById<View>(R.id.phone)
+                val addrView = view.findViewById<View>(R.id.addr)
                 /*val activityOptions=ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this@Map,
                     Pair(nameView, name_const),
                     Pair(phoneView, phone_const),
                     Pair(addrView, addr_const)
                     )*/
-                view.transitionName="share_element_container"
-                val options= ActivityOptions.makeSceneTransitionAnimation(this@Map,view,"share_element_container")
-                startActivityForResult(intent,1,options.toBundle())
+                view.transitionName = "share_element_container"
+                val options = ActivityOptions.makeSceneTransitionAnimation(
+                    this@Map,
+                    view,
+                    "share_element_container"
+                )
+                startActivityForResult(intent, 1, options.toBundle())
             }
         })
-        presenter=PresenterMap(this)
-        binding.persistentBottomSheet.recyclerview.layoutManager= LinearLayoutManager(this)
-        bottomSheetBehavior = BottomSheetBehavior.from( binding.persistentBottomSheet.persistentBottomSheet)
-        bottomSheetBehavior.isFitToContents=false
-        bottomSheetBehavior.halfExpandedRatio=0.4F
-        bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback(){
+        presenter = PresenterMap(this)
+        binding.persistentBottomSheet.recyclerview.layoutManager = LinearLayoutManager(this)
+        bottomSheetBehavior =
+            BottomSheetBehavior.from(binding.persistentBottomSheet.persistentBottomSheet)
+        bottomSheetBehavior.isFitToContents = false
+        bottomSheetBehavior.halfExpandedRatio = 0.4F
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, state: Int) {
                 when (state) {
 
                     BottomSheetBehavior.STATE_HIDDEN -> {
 
                     }
-                    BottomSheetBehavior.STATE_EXPANDED ->{}
+                    BottomSheetBehavior.STATE_EXPANDED -> {}
 
-                    BottomSheetBehavior.STATE_COLLAPSED ->{}
+                    BottomSheetBehavior.STATE_COLLAPSED -> {}
 
                     BottomSheetBehavior.STATE_DRAGGING -> {
                     }
@@ -132,6 +139,7 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
                     }
                 }
             }
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
         })
@@ -139,54 +147,55 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
 
     override fun onResume() {
         super.onResume()
-        ServiceSelect= intent.getStringExtra("service").toString()
+        ServiceSelect = intent.getStringExtra("service").toString()
         //todo adapter init 先做
         presenter.getData(ServiceSelect)
-        if(ServiceSelect=="null")binding.persistentBottomSheet.recyclerview.adapter=branchAdapter
-        else binding.persistentBottomSheet.recyclerview.adapter=atmAdapter
+        if (ServiceSelect == "null") binding.persistentBottomSheet.recyclerview.adapter =
+            branchAdapter
+        else binding.persistentBottomSheet.recyclerview.adapter = atmAdapter
     }
 
     override fun onBackPressed() {
-        if(bottomSheetBehavior.state!=BottomSheetBehavior.STATE_COLLAPSED){
-            bottomSheetBehavior.state=BottomSheetBehavior.STATE_COLLAPSED
-        }
-        else super.onBackPressed()
+        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_COLLAPSED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        } else super.onBackPressed()
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         data?.extras?.let {
-            if(requestCode==1 && resultCode== Activity.RESULT_OK){
-                Toast.makeText(this@Map,it.getString("test"), Toast.LENGTH_SHORT).show()
+            if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this@Map, it.getString("test"), Toast.LENGTH_SHORT).show()
             }
         }
     }
-    private fun showDialog(){
-        if(ServiceSelect!="null"){
-            val filterDialog=FilterDialogAtm(this)
+
+    private fun showDialog() {
+        if (ServiceSelect != "null") {
+            val filterDialog = FilterDialogAtm(this)
             filterDialog
-                .setConfirm(object:FilterDialogAtm.IOnConfirmListener{
-                    override fun onConfirm(checkArray:Array<Boolean>) {
+                .setConfirm(object : FilterDialogAtm.IOnConfirmListener {
+                    override fun onConfirm(checkArray: Array<Boolean>) {
                         //get the result of checkbox filter
                         filterDialog.dismiss()
                     }
                 })
-                .setCancel(object:FilterDialogAtm.IOnCancelListener{
+                .setCancel(object : FilterDialogAtm.IOnCancelListener {
                     override fun onCancel(dialog: FilterDialogAtm?) {
                         filterDialog.dismiss()
                     }
                 }).show()
-        }
-        else{
-            val filterDialog=FilterDialogBank(this)
+        } else {
+            val filterDialog = FilterDialogBank(this)
             filterDialog
-                .setConfirm(object :FilterDialogBank.IOnConfirmListener{
-                    override fun onConfirm(checkArray:Array<Boolean>) {
+                .setConfirm(object : FilterDialogBank.IOnConfirmListener {
+                    override fun onConfirm(checkArray: Array<Boolean>) {
                         //get the result of checkbox filter
                         filterDialog.dismiss()
                     }
                 })
-                .setCancel(object:FilterDialogBank.IOnCancelListener{
+                .setCancel(object : FilterDialogBank.IOnCancelListener {
                     override fun onCancel(dialog: FilterDialogBank?) {
                         filterDialog.dismiss()
                     }
@@ -211,7 +220,7 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
     /**
      * Adds markers to the map with clustering support.
      */
-    private fun addClusteredMarkersBr(googleMap: GoogleMap,responseBody: List<branchItem>) {
+    private fun addClusteredMarkersBr(googleMap: GoogleMap, responseBody: List<branchItem>) {
         // Create the ClusterManager class and set the custom renderer.
         val clusterManager = ClusterManager<branchItem>(this, googleMap)
         clusterManager.renderer =
@@ -244,7 +253,8 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
             clusterManager.clusterMarkerCollection.markers.forEach { it.alpha = 0.3f }
         }
     }
-    private fun addClusteredMarkersAtm(googleMap: GoogleMap,responseBody: List<AtmItem>) {
+
+    private fun addClusteredMarkersAtm(googleMap: GoogleMap, responseBody: List<AtmItem>) {
         // Create the ClusterManager class and set the custom renderer.
         val clusterManager = ClusterManager<AtmItem>(this, googleMap)
         clusterManager.renderer =
@@ -280,12 +290,13 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
 
     override fun onSuccessBr(responseBody: List<branchItem>) {
         //val myAdapter=CustomAdapter(responseBody)
-        branchAdapter.mList=responseBody
+        branchAdapter.mList = responseBody
         branchAdapter.notifyDataSetChanged()
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)as? SupportMapFragment
+        val mapFragment =
+            supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment
         mapFragment?.getMapAsync { googleMap ->
             //addMarkers(googleMap)
-            addClusteredMarkersBr(googleMap,responseBody)
+            addClusteredMarkersBr(googleMap, responseBody)
 
             // Set custom info window adapter.
             // googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
@@ -298,13 +309,19 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
         }
     }
 
-    override fun onSuccessAtm(responseBody: List<AtmItem>) {
-        atmAdapter.mList=responseBody
+    override fun onSuccessAtm(responseBody: MutableList<AtmItem>) {
+        atmAdapter.mList = responseBody
+        val now =
+            AtmItem("您的位置", LatLng(25.038536533061507, 121.56911953097298), "", "", "", "", "")
+        atmAdapter.mList?.let {
+            it.add(now)
+        }
         atmAdapter.notifyDataSetChanged()
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)as? SupportMapFragment
+        val mapFragment =
+            supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment
         mapFragment?.getMapAsync { googleMap ->
             //addMarkers(googleMap)
-            addClusteredMarkersAtm(googleMap,responseBody)
+            addClusteredMarkersAtm(googleMap, responseBody)
 
             // Set custom info window adapter.
             // googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this))
@@ -316,16 +333,18 @@ class Map : AppCompatActivity(),ContractMap.IView2 {
             }
         }
     }
-
     override fun onFail(message: String) {
         Log.d("MainActivity3", "onFailure$message")
     }
-    private fun expandCollapseSheet(){
-        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        } else {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-        }
-    }
 }
+
+
+
+/*private fun expandCollapseSheet() {
+    if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    } else {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+    }
+}*/

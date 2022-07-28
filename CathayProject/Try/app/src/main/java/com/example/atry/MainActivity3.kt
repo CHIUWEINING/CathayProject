@@ -3,6 +3,7 @@ package com.example.atry
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.Transition
@@ -53,6 +54,10 @@ class MainActivity3 : AppCompatActivity() {
             duration = 1000
             addTarget(android.R.id.content)
         }
+        val animationDrawable = binding.constraintLayout.background as AnimationDrawable
+        animationDrawable.setEnterFadeDuration(2000)
+        animationDrawable.setExitFadeDuration(4000)
+        animationDrawable.start()
     }
 
 

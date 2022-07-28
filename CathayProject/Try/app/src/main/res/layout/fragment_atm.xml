@@ -10,64 +10,96 @@
     <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ServiceDrop"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="76dp"
+            android:layout_marginEnd="130dp"
+            android:src="@drawable/dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/Countydrop"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="130dp"
+            android:src="@drawable/dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerService" />
+
+        <ImageView
+            android:id="@+id/DistrictDrop"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="130dp"
+            android:src="@drawable/dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCounty" />
 
         <Spinner
             android:id="@+id/spinnerService"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="168dp"
             android:layout_marginTop="76dp"
+            android:background="@drawable/spinner_border"
             android:contentDescription='@string/Service'
             android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
             android:id="@+id/spinnerCounty"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="168dp"
             android:layout_marginTop="40dp"
             android:contentDescription="@string/County"
             android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerService" />
+            android:background="@drawable/spinner_border"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerService"
+            android:popupBackground="@color/light_green" />
+
 
         <Spinner
             android:id="@+id/spinnerDistrict"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="168dp"
             android:layout_marginTop="40dp"
             android:contentDescription="@string/District"
             android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerCounty" />
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCounty"
+            android:popupBackground="@color/light_green"
+            android:background="@drawable/spinner_border"/>
 
-        <Button
+
+        <com.example.atry.LoadingButton
             android:id="@+id/buttonAssure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
+            android:layout_marginStart="162dp"
             android:layout_marginTop="55dp"
-            android:text="@string/Assure"
-            android:textColor="#424242"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerDistrict" />
-        <!--<evan.chen.tutorial.loadingbutton.LoadingButton
-            android:id="@+id/buttonAssure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_background"
-            android:text="立即訂購"
+            android:background="@drawable/btn_shape"
+            android:popupBackground="@color/light_green"
+            android:text="確認"
             android:textColor="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerDistrict"
-            android:layout_marginStart="160dp"
-            android:layout_marginTop="55dp"
-            tools:ignore="MissingConstraints" />-->
+            app:layout_constraintTop_toBottomOf="@+id/DistrictDrop"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="132dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

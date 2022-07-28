@@ -1,17 +1,16 @@
 package com.example.atry.fragment
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.fragment.app.Fragment
 import com.example.atry.*
-
 import com.example.atry.databinding.FragmentAtmBinding
 
 
@@ -49,20 +48,24 @@ class AtmFragment : Fragment(), ContractAtm.IViewAtm {
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
         }
-
+        binding.buttonAssure.setDoneImage(R.drawable.ic_check_24dp)
         binding.buttonAssure.setOnClickListener {
-            (activity as? Home)?.run {
-                goTest(
-                    binding.spinnerService.selectedItem.toString(),
-                    binding.spinnerDistrict.selectedItem.toString(),
-                    binding.spinnerCounty.selectedItem.toString()
-                )
-            }
-
+            binding.buttonAssure.startAnimation()
+            Handler().postDelayed({
+                binding.buttonAssure.doneLoadingAnimation()
+            },2000)
+            Handler().postDelayed({
+                (activity as? Home)?.run {
+                    goTest(
+                        binding.spinnerService.selectedItem.toString(),
+                        binding.spinnerDistrict.selectedItem.toString(),
+                        binding.spinnerCounty.selectedItem.toString()
+                    )
+                }
+            },3000)
         }
 
     }
-
     private fun adaptService(arrayService: Int) {
         binding.spinnerService.setAdapter(arrayService)
     }

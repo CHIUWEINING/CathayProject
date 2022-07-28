@@ -1,4 +1,4 @@
-package evan.chen.tutorial.loadingbutton
+package com.example.atry
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -7,9 +7,9 @@ import android.annotation.SuppressLint
 import android.graphics.*
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import com.example.atry.R
 
 // Reveal 改成完成的圖
 @SuppressLint("ResourceAsColor")
@@ -36,7 +36,9 @@ class RevealDrawable(private val animatedView: View, private var doneBitmap: Bit
     init {
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
-        paint.color=android.R.color.holo_blue_dark
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            paint.color=animatedView.context.getColor(R.color.green)
+        }
     }
 
     override fun onBoundsChange(bounds: Rect) {

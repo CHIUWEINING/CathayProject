@@ -37,11 +37,11 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
                         call: Call<List<AtmResponse>?>,
                         response: Response<List<AtmResponse>?>
                     ) {
-                        var body: List<AtmItem>? = null
+                        var body: MutableList<AtmItem>? = null
                         response.body()?.let {
                             body = it.map {
                                 it.toAtmItem()
-                            }
+                            }.toMutableList()
                         }
                         body?.let {
                             view.onSuccessAtm(it)

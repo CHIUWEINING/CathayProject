@@ -1,4 +1,4 @@
-package evan.chen.tutorial.loadingbutton
+package com.example.atry
 
 import android.animation.*
 import android.content.Context
@@ -33,7 +33,7 @@ class LoadingButton : AppCompatButton {
     var rectButtonHeight: Int = 0
     var rectButtonWidth: Int = 0
     var initButtonText: String? = null
-    var initialCornerRadius: Float = 0f
+    var initialCornerRadius: Float = 79f
     var finalCornerRadius: Float = 90f
 
     private enum class State {
@@ -169,7 +169,6 @@ class LoadingButton : AppCompatButton {
 
     private fun revertAnimation() {
         state = State.IDLE
-
         val cornerAnimation = getCornerAnimation(initialCornerRadius)
         val widthAnimation = getWidthAnimation(width, rectButtonWidth)
 

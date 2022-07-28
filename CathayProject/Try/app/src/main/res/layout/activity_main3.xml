@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     style="@style/MaterialComponent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity3">
+    tools:context=".MainActivity3"
+    android:id="@+id/constraintLayout"
+    android:background="@drawable/gradient_list">
 
     <TextView
         android:id="@+id/name"

@@ -9,41 +9,70 @@
     <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <Spinner
-            android:id="@+id/spinnerCounty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="168dp"
+        <ImageView
+            android:id="@+id/CountyDrop"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
             android:layout_marginTop="92dp"
-            android:contentDescription="@string/County"
-            android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="130dp"
+            android:src="@drawable/dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
             android:id="@+id/spinnerDistrict"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="168dp"
             android:layout_marginTop="60dp"
+            android:background="@drawable/spinner_border"
             android:contentDescription="@string/District"
             android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:popupBackground="@color/light_green"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toBottomOf="@+id/spinnerCounty" />
 
-        <Button
+        <ImageView
+            android:id="@+id/DistrictDrop"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="130dp"
+            android:src="@drawable/dropdown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCounty" />
+
+        <Spinner
+            android:id="@+id/spinnerCounty"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="92dp"
+            android:background="@drawable/spinner_border"
+            android:contentDescription="@string/County"
+            android:minHeight="48dp"
+            android:popupBackground="@color/light_green"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.atry.LoadingButton
             android:id="@+id/buttonAssure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="160dp"
+            android:layout_marginStart="162dp"
             android:layout_marginTop="75dp"
-            android:text="@string/Assure"
-            android:textColor="#424242"
+            android:background="@drawable/btn_shape"
+            android:text="確認"
+            android:textColor="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerDistrict" />
+            app:layout_constraintTop_toBottomOf="@+id/DistrictDrop" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="132dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

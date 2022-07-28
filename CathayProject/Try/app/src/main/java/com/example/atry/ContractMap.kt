@@ -9,7 +9,7 @@ interface ContractMap {
     }
     interface IView2{
         fun onSuccessBr(responseBody:List<branchItem>)
-        fun onSuccessAtm(responseBody: List<AtmItem>)
+        fun onSuccessAtm(responseBody: MutableList<AtmItem>)
         fun onFail(message:String)
     }
 }

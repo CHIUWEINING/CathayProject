@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.atry.BitmapHelper
 import com.example.atry.R
-import com.example.atry.branchItem
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 
@@ -31,7 +31,7 @@ class AtmRenderer(
         )
         BitmapHelper.vectorToBitmap(
             context,
-            R.drawable.ic_atm_machine,
+            R.drawable.ic_atm_svgrepo_com,
             color
         )
     }
@@ -44,9 +44,14 @@ class AtmRenderer(
         item: AtmItem,
         markerOptions: MarkerOptions
     ) {
-        markerOptions.title(item.name)
-            .position(item.latLng)
-            .icon(atmIcon)
+        if (item.name != "您的位置") {
+            markerOptions.title(item.name)
+                .position(item.latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.atm_machine))
+        }else {
+            markerOptions.title(item.name)
+                .position(item.latLng)
+        }
     }
 
     /**
