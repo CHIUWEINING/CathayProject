@@ -1,6 +1,5 @@
 package com.example.atry.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
@@ -10,14 +9,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.atry.*
-import com.example.atry.Map
+import com.example.atry.contract.ContractBank
 import com.example.atry.databinding.FragmentBankBinding
+import com.example.atry.presenter.PresenterBank
 
 
-
-class BankFragment : Fragment(),ContractBank.IViewAtm{
+class BankFragment : Fragment(), ContractBank.IViewAtm{
     private lateinit var binding:FragmentBankBinding
-    private lateinit var presenter:ContractBank.IPresenterAtm
+    private lateinit var presenter: ContractBank.IPresenterAtm
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -33,7 +32,7 @@ class BankFragment : Fragment(),ContractBank.IViewAtm{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter=PresenterBank(this)
+        presenter= PresenterBank(this)
         presenter.getCounty()
         binding.spinnerCounty.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(

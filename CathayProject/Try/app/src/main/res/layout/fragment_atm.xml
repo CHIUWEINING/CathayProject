@@ -16,81 +16,70 @@
             android:id="@+id/ServiceDrop"
             android:layout_width="50dp"
             android:layout_height="48dp"
-            android:layout_marginTop="76dp"
-            android:layout_marginEnd="130dp"
             android:src="@drawable/dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/spinnerService"
+            app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
         <ImageView
             android:id="@+id/Countydrop"
             android:layout_width="50dp"
             android:layout_height="48dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="130dp"
             android:src="@drawable/dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerService" />
+            app:layout_constraintEnd_toEndOf="@+id/spinnerCounty"
+            app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
         <ImageView
             android:id="@+id/DistrictDrop"
             android:layout_width="50dp"
             android:layout_height="48dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="130dp"
             android:src="@drawable/dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerCounty" />
+            app:layout_constraintEnd_toEndOf="@+id/spinnerDistrict"
+            app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
         <Spinner
             android:id="@+id/spinnerService"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="76dp"
             android:background="@drawable/spinner_border"
             android:contentDescription='@string/Service'
             android:minHeight="48dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
         <Spinner
             android:id="@+id/spinnerCounty"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:background="@drawable/spinner_border"
             android:contentDescription="@string/County"
             android:minHeight="48dp"
-            android:background="@drawable/spinner_border"
+            android:popupBackground="@color/light_green"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerService"
-            android:popupBackground="@color/light_green" />
+            app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
 
         <Spinner
             android:id="@+id/spinnerDistrict"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:background="@drawable/spinner_border"
             android:contentDescription="@string/District"
             android:minHeight="48dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerCounty"
             android:popupBackground="@color/light_green"
-            android:background="@drawable/spinner_border"/>
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
 
-        <com.example.atry.LoadingButton
+        <com.example.atry.loadingButton.LoadingButton
             android:id="@+id/buttonAssure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="162dp"
-            android:layout_marginTop="55dp"
             android:background="@drawable/btn_shape"
             android:popupBackground="@color/light_green"
             android:text="確認"
             android:textColor="@android:color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/DistrictDrop"
+            app:layout_constraintStart_toStartOf="@+id/guideline10"
+            app:layout_constraintTop_toTopOf="@+id/guideline9"
             tools:ignore="MissingConstraints" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -98,7 +87,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="132dp" />
+            app:layout_constraintGuide_percent="0.33" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.28" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.46" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.64" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.39" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,6 +1,5 @@
 package com.example.atry.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -11,7 +10,9 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.example.atry.*
+import com.example.atry.contract.ContractAtm
 import com.example.atry.databinding.FragmentAtmBinding
+import com.example.atry.presenter.PresenterAtm
 
 
 class AtmFragment : Fragment(), ContractAtm.IViewAtm {
