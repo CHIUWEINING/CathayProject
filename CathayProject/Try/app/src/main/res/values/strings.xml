@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">國泰服務站</string>
+    <string name="Service">all</string>
+    <string name="County">all</string>
+    <string name="District">all</string>
+    <string name="Assure">確認</string>
+    <string name="Topic">國泰服務站</string>
+    <string name="btnAtm">ATM</string>
+    <string name="btnBank">國泰分行</string>
+    <string name="button">button</string>
+    <string name="edit">Edit</string>
+    <string-array name="service">
+        <item>存款</item>
+        <item>提款</item>
+        <item>外幣</item>
+        <item>補摺</item>
+    </string-array>
+    <string-array name="County">
+        <item>Taipei</item>
+        <item>New Taipei</item>
+        <item>Yunlin</item>
+    </string-array>
+    <string-array name="Taipei">
+        <item>大安區</item>
+        <item>文山區</item>
+        <item>信義區</item>
+    </string-array>
+    <string-array name="Ｎew_Taipei">
+        <item>存款</item>
+        <item>提款</item>
+        <item>開戶</item>
+        <item>兌換外幣</item>
+        <item>吹冷氣</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

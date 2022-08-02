@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="fragment_container" type="id" />
+    <item name="frgFragment" type="id" />
+    <item name="map_fragment" type="id" />
+    <item name="loadingPanel" type="id">loadingPanel</item>
+    <item name="loading1" type="id" />
+</resources>
