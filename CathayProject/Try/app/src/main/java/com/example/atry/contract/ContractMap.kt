@@ -5,7 +5,7 @@ import com.example.atry.branch.branchItem
 
 interface ContractMap {
     interface IPresenter2{
-        fun getData(serviceSelect:String?)
+        fun getDataSimple(serviceSelect:String?,lng:Double,lat:Double)
     }
     interface IView2{
         fun onSuccessBr(responseBody:MutableList<branchItem>)

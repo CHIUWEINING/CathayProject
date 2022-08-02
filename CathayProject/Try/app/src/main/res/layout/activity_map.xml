@@ -17,7 +17,7 @@
                 android:id="@+id/map_fragment"
                 class="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="621dp"
+                android:layout_height="686dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,12 +34,14 @@
         <RelativeLayout
             android:id="@+id/loading"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center" >
             <ProgressBar
+                android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true" />
-
+                android:indeterminate="true"
+                />
         </RelativeLayout>
 
         <include

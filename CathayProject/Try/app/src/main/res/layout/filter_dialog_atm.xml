@@ -31,8 +31,9 @@
         android:layout_marginEnd="71dp"
         android:text="無卡提款"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/twoHundred"
-        app:layout_constraintTop_toBottomOf="@+id/Hours" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/Line"
+        app:layout_constraintTop_toBottomOf="@+id/koko" />
 
     <Button
         android:id="@+id/Cancel"
@@ -65,7 +66,7 @@
         android:layout_marginTop="46dp"
         android:text="一卡通服務"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/twoHundred" />
+        app:layout_constraintTop_toBottomOf="@+id/Line" />
 
     <CheckBox
         android:id="@+id/eye"
@@ -102,24 +103,25 @@
         app:layout_constraintTop_toBottomOf="@+id/eye" />
 
     <CheckBox
-        android:id="@+id/Hours"
+        android:id="@+id/koko"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="116dp"
         android:layout_marginTop="56dp"
         android:layout_marginEnd="52dp"
-        android:text="24小時服務"
+        android:text="koko服務"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/QRCode"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/twoHundred"
+        android:id="@+id/Line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
         android:layout_marginTop="48dp"
-        android:text="200元鈔卷"
+        android:text="LinePay服務"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/QRCode" />
 

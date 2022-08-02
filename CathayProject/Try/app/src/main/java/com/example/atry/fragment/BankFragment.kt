@@ -51,16 +51,16 @@ class BankFragment : Fragment(), ContractBank.IViewAtm{
             binding.buttonAssure.startAnimation()
             Handler().postDelayed({
                 binding.buttonAssure.doneLoadingAnimation()
-            },2000)
+            },1000)
             Handler().postDelayed({
                 (activity as? Home)?.run {
                     goTest(
-                        null,
+                        TYPE.BANK.toString(),
                         binding.spinnerDistrict.selectedItem.toString(),
                         binding.spinnerCounty.selectedItem.toString()
                     )
                 }
-            },3000)
+            },1500)
         }
     }
 

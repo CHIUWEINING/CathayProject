@@ -34,8 +34,8 @@ class FilterDialogAtm(context:Context) : Dialog(context){
         binding.Sure.setOnClickListener {
             confirmListener?.let{
                 val checkArray= arrayOf<Boolean>(binding.QRCode.isChecked
-                    ,binding.Hours.isChecked
-                    ,binding.twoHundred.isChecked
+                    ,binding.koko.isChecked
+                    ,binding.Line.isChecked
                     ,binding.NoCard.isChecked
                     ,binding.OneCard.isChecked
                     ,binding.eye.isChecked
@@ -52,8 +52,8 @@ class FilterDialogAtm(context:Context) : Dialog(context){
             R.id.Sure -> {
                 confirmListener?.let {
                     val checkArray= arrayOf<Boolean>(binding.QRCode.isChecked
-                        ,binding.Hours.isChecked
-                        ,binding.twoHundred.isChecked
+                        ,binding.koko.isChecked
+                        ,binding.Line.isChecked
                         ,binding.NoCard.isChecked
                         ,binding.OneCard.isChecked
                         ,binding.eye.isChecked

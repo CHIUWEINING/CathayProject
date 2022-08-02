@@ -1,9 +1,15 @@
 package com.example.atry
 
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +17,7 @@ import android.view.Window
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atry.recycleview.AtmAdapter
@@ -45,6 +52,10 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     private lateinit var binding: ActivityMapBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var presenter: ContractMap.IPresenter2
+    private lateinit var locationManager:LocationManager
+    private lateinit var commandStr:String
+    public val MY_PERMISSION_ACCESS_COARSE_LOCATION= 11
+    public val MY_PERMISSION_ACCESS_FINE_LOCATION=11
 
     //"https://172.25.138.56:80/"
     //localhost:80/BM/find/25.038536533061507/121.56911953097298/0.2
@@ -154,15 +165,31 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
             }
         })
-
     }
-
+    fun getMyPosition(){
+        locationManager=getSystemService(LOCATION_SERVICE) as LocationManager
+        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),MY_PERMISSION_ACCESS_FINE_LOCATION)
+        }
+    }
     override fun onResume() {
         super.onResume()
         ServiceSelect = intent.getStringExtra("service").toString()
         //todo adapter init 先做
-        presenter.getData(ServiceSelect)
-        if (ServiceSelect == "null") binding.persistentBottomSheet.recyclerview.adapter =
+        commandStr=LocationManager.NETWORK_PROVIDER
+        getMyPosition()
+        locationManager.requestLocationUpdates(commandStr,1000,0f,object:LocationListener{
+            override fun onLocationChanged(p0: Location) {
+                println(p0.longitude)
+                println(p0.latitude)
+            }
+        })
+        var location=locationManager.getLastKnownLocation(commandStr)
+        if (location != null) {
+            presenter.getDataSimple(ServiceSelect,location.longitude,location.latitude)
+        }
+        binding.progressBar.visibility=View.VISIBLE
+        if (ServiceSelect == "BANK") binding.persistentBottomSheet.recyclerview.adapter =
             branchAdapter
         else binding.persistentBottomSheet.recyclerview.adapter = atmAdapter
     }
@@ -184,7 +211,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     }
 
     private fun showDialog() {
-        if (ServiceSelect != "null") {
+        if (ServiceSelect != "ATM") {
             val filterDialog = FilterDialogAtm(this)
             filterDialog
                 .setConfirm(object : FilterDialogAtm.IOnConfirmListener {
@@ -304,7 +331,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
         //val myAdapter=CustomAdapter(responseBody)
         branchAdapter.mList = responseBody
         val now =
-            branchItem("您的位置", LatLng(25.038536533061507, 121.56911953097298), "", "", "", "", "")
+            branchItem("您的位置", LatLng(25.038536533061507, 121.56911953097298), "", "", "", "", "",0.0)
         branchAdapter.mList?.let {
             it.add(now)
         }
@@ -326,13 +353,14 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                 }
             }
         }
-
+        loading=false
+        binding.progressBar.visibility=View.INVISIBLE
     }
 
     override fun onSuccessAtm(responseBody: MutableList<AtmItem>) {
         atmAdapter.mList = responseBody
         val now =
-            AtmItem("您的位置", LatLng(25.038536533061507, 121.56911953097298), "", "", "", "", "")
+            AtmItem("您的位置", "",LatLng(25.038536533061507, 121.56911953097298), "", "", "", "", "","","","","","","","",0.0)
         atmAdapter.mList?.let {
             it.add(now)
         }
@@ -354,6 +382,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                 }
             }
         }
+        binding.progressBar.visibility=View.INVISIBLE
     }
 
     override fun onFail(message: String) {
@@ -362,10 +391,6 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     }
 }
 
-enum class TYPE {
-    ATM,
-    BANK
-}
 
 /*private fun expandCollapseSheet() {
     if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {

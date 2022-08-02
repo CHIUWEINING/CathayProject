@@ -64,12 +64,13 @@ class AtmAdapter() :
         val name: TextView = itemView.findViewById(R.id.name)
         val phone: TextView = itemView.findViewById(R.id.phone)
         val addr: TextView = itemView.findViewById(R.id.addr)
-
+        val dist: TextView = itemView.findViewById(R.id.distance)
         fun setData(data: AtmItem, position:Int) {
 //            textView.context.getString()
             name.text = "("+data.branchId+")"+data.name
             phone.text = data.kindname
             addr.text = data.address
+            dist.text= "距離："+data.dist.toString()+" km"
             itemView.setOnClickListener {
                 listener.onItemClick(data,itemView,position)
             }

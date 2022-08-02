@@ -31,14 +31,24 @@ data class AtmResponse(
     val cardless:String,
     val qrcode:String,
     val coin:String,
-    val face:String
+    val face:String,
+    val distanceToCenter:Double
 )
 fun AtmResponse.toAtmItem(): AtmItem = AtmItem(
     name=branchname,
+    sno = sno,
     latLng = LatLng(latitude, longitude),
     branchId = branchid,
     address= address,
     teleNo = tel,
     kindname = kindname,
-    inOut = inout
+    qrCode = qrcode,
+    cardLess = cardless,
+    iPass = ipass,
+    visionImpaired = visionimpaired,
+    coin = coin,
+    face = face,
+    koko = koko,
+    linePay = linepay,
+    dist = distanceToCenter
 )

@@ -10,7 +10,8 @@ data class branchItem(
     val branchId:String?,
     val zipCode:String?,
     val faxNo:String?,
-    val teleNo:String?
+    val teleNo:String?,
+    val dist:Double?
     ):ClusterItem{
     override fun getPosition(): LatLng =
         latLng

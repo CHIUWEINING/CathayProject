@@ -40,3 +40,7 @@ class Home : AppCompatActivity() ,Handler{
 interface Handler{
     fun goTest(serviceSelect:String?,districtSelect :String?,countySelect:String?)
 }
+enum class TYPE {
+    ATM,
+    BANK
+}
