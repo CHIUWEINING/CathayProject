@@ -2,14 +2,13 @@ package com.example.atry.presenter
 
 import android.util.Log
 import com.example.atry.Map.Companion.loading
-import com.example.atry.retrofit.RetrofitAtm
-import com.example.atry.retrofit.RetrofitBranch
 import com.example.atry.atm.AtmItem
 import com.example.atry.atm.AtmRequest
 import com.example.atry.atm.AtmResponse
 import com.example.atry.atm.toAtmItem
 import com.example.atry.branch.*
 import com.example.atry.contract.ContractMap
+import com.example.atry.retrofit.Retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,7 +18,7 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
     override fun getDataSimple(serviceSelect: String?,lng:Double,lat:Double) {
         loading=true
         if (serviceSelect == "BANK") {
-            RetrofitBranch.Api.getData(BrRequest(lat, lng, 5.0))
+            Retrofit.ApiBr.getData(BrRequest(25.038835000, 121.568656000, 5.0))
                 .enqueue(object : Callback<List<branchResponse>?> {
                     override fun onResponse(
                         call: Call<List<branchResponse>?>,
@@ -32,7 +31,7 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
                             }.toMutableList()
                         }
                         body?.let {
-                            view.onSuccessBr(it)
+                            view.onSuccess(it as MutableList<Any>)
                         }
                     }
 
@@ -42,7 +41,7 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
                     }
                 })
         }else{
-            RetrofitAtm.Api.getData(AtmRequest(lat, lng, 1.0))
+            Retrofit.ApiAtm.getData(AtmRequest(25.038835000, 121.568656000, 1.0))
                 .enqueue(object : Callback<List<AtmResponse>?> {
                     override fun onResponse(
                         call: Call<List<AtmResponse>?>,
@@ -55,7 +54,7 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
                             }.toMutableList()
                         }
                         body?.let {
-                            view.onSuccessAtm(it)
+                            view.onSuccess(it as MutableList<Any>)
                         }
                     }
 

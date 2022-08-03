@@ -16,7 +16,7 @@ class AtmAdapter() :
     var mList: MutableList<AtmItem>?=null
     private lateinit var mListener: onItemClickListener
     interface onItemClickListener {
-        fun onItemClick(item: AtmItem, view:View, position: Int)
+        fun onItemClick(item: AtmItem, view:View)
     }
 
     fun setOnItemCLickListener(listener: onItemClickListener) {
@@ -38,6 +38,7 @@ class AtmAdapter() :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var animation: Animation = AnimationUtils.loadAnimation(holder.itemView.context,android.R.anim.slide_in_left)
         mList?.let{
+
             val itemsViewModel = it[position]
             holder.setData(itemsViewModel,position)
         }
@@ -59,7 +60,6 @@ class AtmAdapter() :
     class ViewHolder(ItemView: View, val listener: onItemClickListener) :
         RecyclerView.ViewHolder(ItemView) {
 
-
         //val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val name: TextView = itemView.findViewById(R.id.name)
         val phone: TextView = itemView.findViewById(R.id.phone)
@@ -72,7 +72,7 @@ class AtmAdapter() :
             addr.text = data.address
             dist.text= "距離："+data.dist.toString()+" km"
             itemView.setOnClickListener {
-                listener.onItemClick(data,itemView,position)
+                listener.onItemClick(data,itemView)
             }
         }
     }

@@ -8,8 +8,8 @@ interface ContractMap {
         fun getDataSimple(serviceSelect:String?,lng:Double,lat:Double)
     }
     interface IView2{
-        fun onSuccessBr(responseBody:MutableList<branchItem>)
-        fun onSuccessAtm(responseBody: MutableList<AtmItem>)
+        //fun onSuccessBr(responseBody:MutableList<branchItem>)
+        fun onSuccess(responseBody: MutableList<Any>)
         fun onFail(message:String)
     }
 }

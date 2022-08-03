@@ -14,11 +14,11 @@ interface ApiBranch{
     @GET("BM/findAllInformation/{center_lat}/{center_lng}/{km}")
     fun getData1(@Path("center_lat")lat:Double,@Path("center_lng")lng:Double,@Path("km")km:Double):Call<List<branchResponse>>
     @POST("BM/find")
-    fun getData(@Body simpleRequest: BrRequest): Call<List<branchResponse>>
+    fun getData(@Body brRequest: BrRequest): Call<List<branchResponse>>
 }
-interface ApiAtm{
+interface ApiATM{
     @GET("ATM/find/{center_lat}/{center_lng}/{km}")
     fun getData1(@Path("center_lat")lat:Double,@Path("center_lng")lng:Double,@Path("km")km:Double):Call<List<AtmResponse>>
     @POST("ATM/find")
-    fun getData(@Body simpleRequest: AtmRequest): Call<List<AtmResponse>>
+    fun getData(@Body atmRequest: AtmRequest): Call<List<AtmResponse>>
 }
