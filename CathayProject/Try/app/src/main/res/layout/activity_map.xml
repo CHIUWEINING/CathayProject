@@ -2,46 +2,59 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        style="@style/MaterialComponent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Map"
-        style="@style/MaterialComponent">
+        tools:context=".Map">
 
-        <FrameLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/frame">
+            android:layout_height="match_parent">
 
-            <fragment
-                android:id="@+id/map_fragment"
-                class="com.google.android.gms.maps.SupportMapFragment"
+            <FrameLayout
+                android:id="@+id/frame"
                 android:layout_width="match_parent"
-                android:layout_height="686dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/guideline21"
+                app:layout_constraintTop_toBottomOf="@+id/guideline20">
 
-            <!--<com.google.android.gms.maps.MapView
-                android:id="@+id/map_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:apiKey="AIzaSyAGbl2uQhFf_RH4Tu2Ag7uZmKKlH53QCvk"
-                />-->
+                <fragment
+                    android:id="@+id/map_fragment"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.075" />
 
-        </FrameLayout>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.94" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <RelativeLayout
             android:id="@+id/loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center" >
+            android:gravity="center">
+
             <ProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
-                />
+                android:indeterminate="true" />
         </RelativeLayout>
 
         <include
@@ -54,9 +67,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:theme="@style/MyDialogTheme"/>
+            android:theme="@style/MyDialogTheme" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

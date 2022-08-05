@@ -66,4 +66,55 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
         }
     }
 
+    override fun getDataBr(brRequest: BrRequest) {
+        loading=true
+        Retrofit.ApiBr.getData(brRequest).enqueue(object : Callback<List<branchResponse>?> {
+            override fun onResponse(
+                call: Call<List<branchResponse>?>,
+                response: Response<List<branchResponse>?>
+            ) {
+                var body: MutableList<branchItem>? = null
+                response.body()?.let {
+                    body = it.map {
+                        it.tobranchItem()
+                    }.toMutableList()
+                }
+                body?.let {
+                    view.onSuccess(it as MutableList<Any>)
+                }
+            }
+
+            override fun onFailure(call: Call<List<branchResponse>?>, t: Throwable) {
+                println(t.message)
+                Log.d("MainActivity3", "onFailure${t.message}")
+            }
+        })
+    }
+
+    override fun getDataAtm(atmRequest: AtmRequest) {
+        loading=true
+        Retrofit.ApiAtm.getData(atmRequest)
+            .enqueue(object : Callback<List<AtmResponse>?> {
+                override fun onResponse(
+                    call: Call<List<AtmResponse>?>,
+                    response: Response<List<AtmResponse>?>
+                ) {
+                    var body: MutableList<AtmItem>? = null
+                    response.body()?.let {
+                        body = it.map {
+                            it.toAtmItem()
+                        }.toMutableList()
+                    }
+                    body?.let {
+                        view.onSuccess(it as MutableList<Any>)
+                    }
+                }
+
+                override fun onFailure(call: Call<List<AtmResponse>?>, t: Throwable) {
+                    println(t.message)
+                    Log.d("MainActivity3", "onFailure${t.message}")
+                }
+            })
+    }
+
 }

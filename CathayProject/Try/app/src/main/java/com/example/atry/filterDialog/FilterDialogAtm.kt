@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.example.atry.R
 import com.example.atry.databinding.FilterDialogAtmBinding
+import com.google.android.material.slider.Slider
 
 class FilterDialogAtm(context:Context) : Dialog(context){
     private lateinit var binding: FilterDialogAtmBinding
@@ -31,34 +32,25 @@ class FilterDialogAtm(context:Context) : Dialog(context){
         super.onCreate(savedInstanceState)
         binding=FilterDialogAtmBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.Sure.setOnClickListener {
-            confirmListener?.let{
-                val checkArray= arrayOf<Boolean>(binding.QRCode.isChecked
-                    ,binding.koko.isChecked
-                    ,binding.Line.isChecked
-                    ,binding.NoCard.isChecked
-                    ,binding.OneCard.isChecked
-                    ,binding.eye.isChecked
-                    ,binding.Change.isChecked
-                    ,binding.face.isChecked
-                )
-                it.onConfirm(checkArray)
-            }
-        }
+        binding.Sure.setOnClickListener(this::clickListener)
         binding.Cancel.setOnClickListener(this::clickListener)
+        binding.slider.setLabelFormatter {
+            "範圍：${it}公里"
+        }
     }
     private fun clickListener(v: View){
         when(v.id){
             R.id.Sure -> {
                 confirmListener?.let {
-                    val checkArray= arrayOf<Boolean>(binding.QRCode.isChecked
-                        ,binding.koko.isChecked
-                        ,binding.Line.isChecked
-                        ,binding.NoCard.isChecked
-                        ,binding.OneCard.isChecked
-                        ,binding.eye.isChecked
-                        ,binding.Change.isChecked
-                        ,binding.face.isChecked
+                    val checkArray= hashMapOf<String,Boolean>(
+                        "qrCode" to binding.QRCode.isChecked
+                        ,"koko" to binding.koko.isChecked
+                        ,"line" to binding.Line.isChecked
+                        ,"cardLess" to binding.cardLess.isChecked
+                        ,"iPass" to binding.iPass.isChecked
+                        ,"visionImpaired" to binding.visionImpaired.isChecked
+                        ,"coin" to binding.Coin.isChecked
+                        ,"face" to binding.face.isChecked
                     )
                     it.onConfirm(checkArray)
                 }
@@ -70,11 +62,21 @@ class FilterDialogAtm(context:Context) : Dialog(context){
             }
         }
     }
+    fun reset(checkArray: HashMap<String, Boolean>){
+        binding.Coin.isChecked=checkArray["coin"]==true
+        binding.face.isChecked=checkArray["face"]==true
+        binding.visionImpaired.isChecked=checkArray["visionImpaired"]==true
+        binding.iPass.isChecked=checkArray["iPass"]==true
+        binding.cardLess.isChecked=checkArray["cardLess"]==true
+        binding.Line.isChecked=checkArray["line"]==true
+        binding.koko.isChecked=checkArray["koko"]==true
+        binding.QRCode.isChecked=checkArray["qrCode"]==true
+    }
     interface IOnCancelListener {
         fun onCancel(dialog: FilterDialogAtm?)
     }
 
     interface IOnConfirmListener {
-        fun onConfirm(checkArray:Array<Boolean>)
+        fun onConfirm(checkArray:HashMap<String,Boolean>)
     }
 }

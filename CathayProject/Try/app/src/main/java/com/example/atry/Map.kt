@@ -2,7 +2,6 @@ package com.example.atry
 
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Intent
@@ -11,6 +10,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.Window
@@ -20,9 +20,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.atry.recycleview.AtmAdapter
 import com.example.atry.atm.AtmItem
-import com.example.atry.recycleview.BranchAdapter
+import com.example.atry.atm.AtmRequest
+import com.example.atry.branch.BrRequest
 import com.example.atry.branch.branchItem
 import com.example.atry.contract.ContractMap
 import com.example.atry.databinding.ActivityMapBinding
@@ -31,15 +31,17 @@ import com.example.atry.filterDialog.FilterDialogBank
 import com.example.atry.mapTool.BitmapHelper
 import com.example.atry.mapTool.MarkerInfoWindowAdapter
 import com.example.atry.presenter.PresenterMap
+import com.example.atry.recycleview.AtmAdapter
+import com.example.atry.recycleview.BranchAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.slider.Slider
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import kotlin.properties.Delegates
-import kotlin.reflect.typeOf
 
 //172.25.137.68
 class Map : AppCompatActivity(), ContractMap.IView2 {
@@ -58,6 +60,10 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     private lateinit var presenter: ContractMap.IPresenter2
     private lateinit var locationManager: LocationManager
     private lateinit var commandStr: String
+    private lateinit var filterDialogAtm:FilterDialogAtm
+    var backupAtm= hashMapOf<String,Boolean>()
+    var backupBr= arrayOf<Boolean>()
+    private lateinit var filterDialogBank: FilterDialogBank
     public val MY_PERMISSION_ACCESS_COARSE_LOCATION = 11
     public val MY_PERMISSION_ACCESS_FINE_LOCATION = 11
 
@@ -84,8 +90,8 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
 
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
+        filterDialogBank= FilterDialogBank(this)
+        filterDialogAtm= FilterDialogAtm(this)
         binding.toolbar.title = "國泰服務站"
         binding.toolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_24dp)
         binding.toolbar.setNavigationOnClickListener {
@@ -146,6 +152,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
 
 
         binding.persistentBottomSheet.recyclerview.layoutManager = LinearLayoutManager(this)
+
         bottomSheetBehavior =
             BottomSheetBehavior.from(binding.persistentBottomSheet.persistentBottomSheet)
         bottomSheetBehavior.isFitToContents = false
@@ -154,32 +161,26 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, state: Int) {
                 when (state) {
-
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-
-                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {}
                     BottomSheetBehavior.STATE_EXPANDED -> {}
-
                     BottomSheetBehavior.STATE_COLLAPSED -> {}
-
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-
-                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {}
+                    BottomSheetBehavior.STATE_SETTLING -> {}
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {}
                 }
             }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
     }
 
-
     override fun onResume() {
         super.onResume()
+        backupAtm= hashMapOf<String,Boolean>()
+        backupBr= arrayOf<Boolean>()
+        val displayMetrics: DisplayMetrics = this.resources.displayMetrics
+        val height=displayMetrics.heightPixels
+        val peekHeight=height *0.06
+        bottomSheetBehavior.peekHeight=peekHeight.toInt()
         ServiceSelect = intent.getStringExtra("service").toString()
         //todo adapter init 先做
         commandStr = LocationManager.NETWORK_PROVIDER
@@ -196,6 +197,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             myLat = location.latitude
             presenter.getDataSimple(ServiceSelect, myLng, myLat)
         }
+
         binding.progressBar.visibility = View.VISIBLE
         if (ServiceSelect == "BANK") binding.persistentBottomSheet.recyclerview.adapter =
             branchAdapter
@@ -239,32 +241,49 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
 
 
     private fun showDialog() {
-        if (ServiceSelect != "ATM") {
-            val filterDialog = FilterDialogAtm(this)
-            filterDialog
+        if (ServiceSelect == "ATM") {
+            filterDialogAtm
                 .setConfirm(object : FilterDialogAtm.IOnConfirmListener {
-                    override fun onConfirm(checkArray: Array<Boolean>) {
+                    override fun onConfirm(checkArray: HashMap<String,Boolean>) {
                         //get the result of checkbox filter
-                        filterDialog.dismiss()
+                        binding.progressBar.visibility=View.VISIBLE
+                        presenter.getDataAtm(atmRequest =
+                        AtmRequest(
+                            25.038835000, 121.568656000,filterDialogAtm.findViewById<Slider>(R.id.slider).value.toDouble(),
+                            koko=if(checkArray["koko"]==true) "1" else "0",
+                            linepay = if(checkArray["line"]==true)"1" else "0",
+                            ipass = if(checkArray["iPass"]==true)"1" else "0",
+                            visionimpaired = if(checkArray["visionImpaired"]==true)"1" else "0",
+                            cardless = if(checkArray["cardLess"]==true)"1" else "0",
+                            qrcode = if(checkArray["qrCode"]==true)"1" else "0",
+                            coin = if(checkArray["coin"]==true)"1" else "0",
+                            face = if(checkArray["face"]==true)"1" else "0"
+                        ))
+                        backupAtm=checkArray
+                        filterDialogAtm.hide()
                     }
                 })
                 .setCancel(object : FilterDialogAtm.IOnCancelListener {
                     override fun onCancel(dialog: FilterDialogAtm?) {
-                        filterDialog.dismiss()
+                        filterDialogAtm.reset(backupAtm)
+                        filterDialogAtm.hide()
                     }
                 }).show()
         } else {
-            val filterDialog = FilterDialogBank(this)
-            filterDialog
+            filterDialogBank
                 .setConfirm(object : FilterDialogBank.IOnConfirmListener {
                     override fun onConfirm(checkArray: Array<Boolean>) {
                         //get the result of checkbox filter
-                        filterDialog.dismiss()
+                        binding.progressBar.visibility=View.VISIBLE
+                        presenter.getDataBr(brRequest = BrRequest(25.038835000, 121.568656000,filterDialogBank.findViewById<Slider>(R.id.slider).value.toDouble(), safety_box =if(checkArray[1])"Y" else "",isfx=if(checkArray[1])"Y" else ""))
+                        backupBr=checkArray
+                        filterDialogBank.hide()
                     }
                 })
                 .setCancel(object : FilterDialogBank.IOnCancelListener {
                     override fun onCancel(dialog: FilterDialogBank?) {
-                        filterDialog.dismiss()
+                        filterDialogBank.reset(backupBr)
+                        filterDialogBank.hide()
                     }
                 }).show()
         }
@@ -274,6 +293,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
 
     private fun <T> addMarkers(googleMap: GoogleMap, responseBody: MutableList<T>) {
         val markerInfoWindowAdapter = MarkerInfoWindowAdapter(this, 2)
+        googleMap.clear()
         googleMap.setInfoWindowAdapter(markerInfoWindowAdapter)
         responseBody.forEach { item ->
             when (item) {
@@ -316,9 +336,6 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                                 .position(item.latLng)
                                 .icon(bankIcon)
                         )
-
-                        // Set place as the tag on the marker object so it can be referenced within
-                        // MarkerInfoWindowAdapter
                         marker?.tag = item
                     }
                 }
@@ -349,14 +366,8 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             }
         }
     }
-
-    /**
-     * Adds markers to the map with clustering support.
-     */
-
-
     override fun onSuccess(responseBody: MutableList<Any>) {
-        responseBody?.let{
+        if(responseBody.size>0){
             when(responseBody[0]){
                 is AtmItem->{
                     atmAdapter.mList = responseBody.toMutableList() as MutableList<AtmItem>
@@ -383,7 +394,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                     responseBody?.let {
                         it.add(now)
                     }
-                    (supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment)?.run {
+                    /*(supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment)?.run {
                         getMapAsync { googleMap ->
                             //addMarkers(googleMap)
                             googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this@Map, 1))
@@ -400,43 +411,94 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                                         googleMap.moveCamera((CameraUpdateFactory.newLatLngZoom(it.latLng,17f)))
                                     }
                                 }
-                                /*googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20))*/
+                                *//*googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20))*//*
                             }
                         }
                     }
                     loading = false
-                    binding.progressBar.visibility = View.INVISIBLE
+                    binding.progressBar.visibility = View.INVISIBLE*/
                 }
                 else -> {
                     branchAdapter.mList = responseBody.toMutableList() as MutableList<branchItem>
                     branchAdapter.notifyDataSetChanged()
                     val now =
-                        branchItem("您的位置", LatLng(25.038835000, 121.568656000), "", "", "", "", "", 0.0)
+                        branchItem("您的位置",
+                            LatLng(25.038835000, 121.568656000),
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            0.0
+                        )
                     responseBody?.let {
                         it.add(now)
                     }
-                    (supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment)?.run {
+                   /* (supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment)?.run {
                         getMapAsync { googleMap ->
-                            //addMarkers(googleMap)
                             googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this@Map, 1))
                             addMarkers(googleMap, responseBody)
-
-                            // Set custom info window adapter.
                             googleMap.setOnMapLoadedCallback {
                                 responseBody.forEach {
                                     it as branchItem
-                                    if (it.name == "您的位置") {
-                                        googleMap.moveCamera((CameraUpdateFactory.newLatLngZoom(it.latLng,14f)))
-                                    }
+                                    if (it.name == "您的位置")googleMap.moveCamera((CameraUpdateFactory.newLatLngZoom(it.latLng,14f)))
                                 }
                             }
                         }
                     }
                     loading = false
-                    binding.progressBar.visibility = View.INVISIBLE
+                    binding.progressBar.visibility = View.INVISIBLE*/
+                }
+            }
+        }else{
+            atmAdapter.mList = responseBody.toMutableList() as MutableList<AtmItem>
+            atmAdapter.notifyDataSetChanged()
+            branchAdapter.mList = responseBody.toMutableList() as MutableList<branchItem>
+            branchAdapter.notifyDataSetChanged()
+            val now =
+                branchItem("您的位置",
+                    LatLng(25.038835000, 121.568656000),
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    0.0
+                )
+            responseBody?.let {
+                it.add(now)
+            }
+            Snackbar.make(binding.root,"抱歉！我們無法找到符合您需求的服務據點。\n您可嘗試減少限制或將增加搜尋範圍",Snackbar.LENGTH_LONG).show()
+        }
+        (supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment)?.run {
+            getMapAsync { googleMap ->
+                //addMarkers(googleMap)
+                googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this@Map, 1))
+                addMarkers(googleMap, responseBody)
+
+                // Set custom info window adapter.
+                googleMap.setOnMapLoadedCallback {
+                    //val bounds = LatLngBounds.builder()
+                    //places.forEach { bounds.include(it.latLng) }
+                    responseBody.forEach {
+                        when(it){
+                            is AtmItem->{
+                                if (it.name == "您的位置") {
+                                    //bounds.include(it.latLng)
+                                    googleMap.moveCamera((CameraUpdateFactory.newLatLngZoom(it.latLng,17f)))
+                                }
+                            }
+                            is branchItem->{
+                                if (it.name == "您的位置")googleMap.moveCamera((CameraUpdateFactory.newLatLngZoom(it.latLng,14f)))
+                            }
+                        }
+                    }
+                    /*googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 20))*/
                 }
             }
         }
+        loading = false
+        binding.progressBar.visibility = View.INVISIBLE
     }
 
     override fun onFail(message: String) {
