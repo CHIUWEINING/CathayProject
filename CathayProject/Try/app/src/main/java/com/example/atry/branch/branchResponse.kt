@@ -40,7 +40,7 @@ data class branchResponse(
         val lng: Double
     )
 }
-fun branchResponse.tobranchItem(): branchItem = branchItem(
+fun branchResponse.tobranchItem(): BranchItem = BranchItem(
     name = branchname,
     latLng = LatLng(latitude.toDouble(), longitude.toDouble()),
     branchId= branchid,
@@ -48,5 +48,7 @@ fun branchResponse.tobranchItem(): branchItem = branchItem(
     zipCode = zipcode,
     faxNo = faxno,
     teleNo = telno,
-    dist = distanceToCenter
+    dist = distanceToCenter,
+    safetyBox = safety_box,
+    isfx = isfx
 )

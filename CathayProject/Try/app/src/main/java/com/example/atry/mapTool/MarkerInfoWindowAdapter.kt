@@ -1,16 +1,14 @@
 package com.example.atry.mapTool
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.example.atry.R
 import com.example.atry.atm.AtmItem
-import com.example.atry.branch.branchItem
+import com.example.atry.branch.BranchItem
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.PointOfInterest
 
 
 class MarkerInfoWindowAdapter(
@@ -21,7 +19,7 @@ class MarkerInfoWindowAdapter(
     override fun getInfoContents(marker: Marker): View? {
         // 1. Get tag
         if(type==1){
-            val place= marker?.tag as? branchItem ?:return null
+            val place= marker?.tag as? BranchItem ?:return null
             name=place.name
             addr=place.address
         }else{

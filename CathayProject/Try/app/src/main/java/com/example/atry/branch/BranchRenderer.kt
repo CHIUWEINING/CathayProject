@@ -17,8 +17,8 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer
 class BranchRenderer(
     private val context: Context,
     map: GoogleMap,
-    clusterManager: ClusterManager<branchItem>
-) : DefaultClusterRenderer<branchItem>(context, map, clusterManager) {
+    clusterManager: ClusterManager<BranchItem>
+) : DefaultClusterRenderer<BranchItem>(context, map, clusterManager) {
 
     /**
      * The icon to use for each cluster item
@@ -39,7 +39,7 @@ class BranchRenderer(
      * This is where marker options should be set.
      */
     override fun onBeforeClusterItemRendered(
-        item: branchItem,
+        item: BranchItem,
         markerOptions: MarkerOptions
     ) {
         markerOptions.title(item.name)
@@ -51,7 +51,7 @@ class BranchRenderer(
      * Method called right after the cluster item (the marker) is rendered.
      * This is where properties for the Marker object should be set.
      */
-    override fun onClusterItemRendered(clusterItem: branchItem, marker: Marker) {
+    override fun onClusterItemRendered(clusterItem: BranchItem, marker: Marker) {
         marker.tag = clusterItem
     }
 }

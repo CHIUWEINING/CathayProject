@@ -25,6 +25,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/droid_sans_bold"
                 android:text="Item"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -36,6 +37,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="2"
+                android:fontFamily="@font/droid_sans_bold"
                 android:text="Item"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -52,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="15dp"
+                android:fontFamily="@font/droid_sans_bold"
                 android:text="Item"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -62,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="15dp"
+                android:fontFamily="@font/droid_sans_bold"
                 android:text="Item"
                 android:textSize="20sp"
                 android:textStyle="bold" />

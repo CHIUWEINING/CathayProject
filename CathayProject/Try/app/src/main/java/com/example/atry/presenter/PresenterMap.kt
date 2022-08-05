@@ -24,7 +24,7 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
                         call: Call<List<branchResponse>?>,
                         response: Response<List<branchResponse>?>
                     ) {
-                        var body: MutableList<branchItem>? = null
+                        var body: MutableList<BranchItem>? = null
                         response.body()?.let {
                             body = it.map {
                                 it.tobranchItem()
@@ -73,7 +73,7 @@ class PresenterMap(private val view: ContractMap.IView2) : ContractMap.IPresente
                 call: Call<List<branchResponse>?>,
                 response: Response<List<branchResponse>?>
             ) {
-                var body: MutableList<branchItem>? = null
+                var body: MutableList<BranchItem>? = null
                 response.body()?.let {
                     body = it.map {
                         it.tobranchItem()

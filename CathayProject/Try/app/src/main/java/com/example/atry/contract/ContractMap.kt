@@ -1,9 +1,7 @@
 package com.example.atry.contract
 
-import com.example.atry.atm.AtmItem
 import com.example.atry.atm.AtmRequest
 import com.example.atry.branch.BrRequest
-import com.example.atry.branch.branchItem
 
 interface ContractMap {
     interface IPresenter2{

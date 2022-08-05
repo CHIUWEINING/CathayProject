@@ -44,8 +44,6 @@ class FilterDialogAtm(context:Context) : Dialog(context){
                 confirmListener?.let {
                     val checkArray= hashMapOf<String,Boolean>(
                         "qrCode" to binding.QRCode.isChecked
-                        ,"koko" to binding.koko.isChecked
-                        ,"line" to binding.Line.isChecked
                         ,"cardLess" to binding.cardLess.isChecked
                         ,"iPass" to binding.iPass.isChecked
                         ,"visionImpaired" to binding.visionImpaired.isChecked
@@ -68,8 +66,6 @@ class FilterDialogAtm(context:Context) : Dialog(context){
         binding.visionImpaired.isChecked=checkArray["visionImpaired"]==true
         binding.iPass.isChecked=checkArray["iPass"]==true
         binding.cardLess.isChecked=checkArray["cardLess"]==true
-        binding.Line.isChecked=checkArray["line"]==true
-        binding.koko.isChecked=checkArray["koko"]==true
         binding.QRCode.isChecked=checkArray["qrCode"]==true
     }
     interface IOnCancelListener {
