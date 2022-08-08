@@ -2,7 +2,7 @@ package com.example.atry.branch
 
 import com.google.android.gms.maps.model.LatLng
 
-data class branchResponse(
+data class BranchResponse(
     val branchid: String,
     val branchname: String,
     val telno: String,
@@ -40,7 +40,7 @@ data class branchResponse(
         val lng: Double
     )
 }
-fun branchResponse.tobranchItem(): BranchItem = BranchItem(
+fun BranchResponse.tobranchItem(): BranchItem = BranchItem(
     name = branchname,
     latLng = LatLng(latitude.toDouble(), longitude.toDouble()),
     branchId= branchid,

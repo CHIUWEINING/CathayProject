@@ -16,7 +16,7 @@ class BranchAdapter() :
     var mList: MutableList<BranchItem>?=null
     private lateinit var mListener: onItemClickListener
     interface onItemClickListener {
-        fun onItemClick(item: BranchItem)
+        fun onItemClick(item: BranchItem,view:View)
     }
 
     fun setOnItemCLickListener(listener: onItemClickListener) {
@@ -72,7 +72,7 @@ class BranchAdapter() :
             addr.text = "("+data.zipCode+")"+data.address
             dist.text= "距離："+data.dist.toString()+" km"
             itemView.setOnClickListener {
-                listener.onItemClick(data)
+                listener.onItemClick(data,itemView)
             }
         }
     }

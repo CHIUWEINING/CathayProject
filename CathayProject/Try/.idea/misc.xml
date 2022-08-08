@@ -23,6 +23,7 @@
         <entry key="app/src/main/res/drawable/ic_outline_atm_24.xml" value="0.254" />
         <entry key="app/src/main/res/drawable/spinner_background.xml" value="0.2585" />
         <entry key="app/src/main/res/drawable/spinner_border.xml" value="0.2585" />
+        <entry key="app/src/main/res/layout/activity_detail_atm.xml" value="0.31614583333333335" />
         <entry key="app/src/main/res/layout/activity_detail_bank.xml" value="0.31614583333333335" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.38649155722326456" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19256744384765634" />

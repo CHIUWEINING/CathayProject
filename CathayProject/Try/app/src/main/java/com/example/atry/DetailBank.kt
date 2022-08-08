@@ -34,22 +34,11 @@ class DetailBank : AppCompatActivity() {
         endLat=list["endLat"]!!
         endLng=list["endLng"]!!
         binding.phone.text = list["phone"]
-        binding.faxNo.text = if(list["faxNo"]==null) "本行無此服務" else "傳真："+list["faxNo"]
+        binding.faxNo.text = if(list["fax"]==null) "本行無此服務" else "傳真："+list["fax"]
         binding.name.text = list["name"]
         binding.addr.text = if(list["addr"]?.length!! <=18)list["addr"] else list["addr"]?.substring(0,17)+"\n"+list["addr"]?.substring(17)
         binding.more1.text= list["more1"]
         binding.more2.text= list["more2"]
-        /*binding.test.setOnClickListener {
-            val bundle1 = Bundle()
-            bundle1.putString("test", test)
-            val intent = Intent()
-            intent.putExtras(bundle1)
-            setResult(Activity.RESULT_OK, intent)
-            finish()
-        }*/
-        /* setTransitionName(binding.name,Map.name_const)
-         setTransitionName(binding.phone,Map.phone_const)
-         setTransitionName(binding.addr,Map.addr_const)*/
         window.sharedElementEnterTransition =
             com.google.android.material.transition.platform.MaterialContainerTransform()
                 .apply {

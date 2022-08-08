@@ -27,7 +27,6 @@ class DetailAtm : AppCompatActivity() {
         setContentView(binding.root)
         findViewById<View>(android.R.id.content).transitionName="share_element_container"
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        val test="test1212"
         var list= intent.getBundleExtra("list")?.getSerializable("list") as HashMap<String,String>
         myLat=list["myLat"]!!
         myLng=list["myLng"]!!
@@ -91,6 +90,15 @@ class DetailAtm : AppCompatActivity() {
             intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity")
             startActivity(intent)
         }
+    }
+
+    override fun onBackPressed() {
+        val intent=Intent()
+        /*val bundle1=Bundle()
+        bundle1.putString("test",test)
+        intent.putExtras(bundle1)*/
+        setResult(Activity.RESULT_OK,intent)
+        finish()
     }
 
 
