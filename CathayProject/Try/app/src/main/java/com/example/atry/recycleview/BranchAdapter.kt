@@ -8,15 +8,15 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.atry.R
-import com.example.atry.branch.branchItem
+import com.example.atry.branch.BranchItem
 
 
 class BranchAdapter() :
     RecyclerView.Adapter<BranchAdapter.ViewHolder>() {
-    var mList: MutableList<branchItem>?=null
+    var mList: MutableList<BranchItem>?=null
     private lateinit var mListener: onItemClickListener
     interface onItemClickListener {
-        fun onItemClick(item: branchItem)
+        fun onItemClick(item: BranchItem)
     }
 
     fun setOnItemCLickListener(listener: onItemClickListener) {
@@ -64,12 +64,13 @@ class BranchAdapter() :
         val name: TextView = itemView.findViewById(R.id.name)
         val phone: TextView = itemView.findViewById(R.id.phone)
         val addr: TextView = itemView.findViewById(R.id.addr)
-
-        fun setData(data: branchItem) {
+        val dist: TextView= itemView.findViewById(R.id.distance)
+        fun setData(data: BranchItem) {
 //            textView.context.getString()
             name.text = "("+data.branchId+")"+data.name
-            phone.text = data.teleNo
+            phone.text = "電話："+data.teleNo
             addr.text = "("+data.zipCode+")"+data.address
+            dist.text= "距離："+data.dist.toString()+" km"
             itemView.setOnClickListener {
                 listener.onItemClick(data)
             }

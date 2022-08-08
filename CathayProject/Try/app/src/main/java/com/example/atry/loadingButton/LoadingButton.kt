@@ -158,12 +158,12 @@ class LoadingButton : AppCompatButton {
         revealDrawable = RevealDrawable(this, doneBitmap!!)
         revealDrawable!!.setBounds(0, 0, width, height)
         revealDrawable!!.start()
-        /*revealDrawable!!.listener = object : RevealDrawable.OnReVealDrawableListener {
+        revealDrawable!!.listener = object : RevealDrawable.OnReVealDrawableListener {
             override fun onFinish() {
                 postDelayed({ revertAnimation() }, 500)
             }
 
-        }*/
+        }
 
     }
 

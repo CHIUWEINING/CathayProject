@@ -28,7 +28,8 @@ data class branchResponse(
     val telno2:String,
     val faxno2:String,
     val email:String,
-    val safety_box:String
+    val safety_box:String,
+    val distanceToCenter:Double
 ){
     data class Geometry(
         val location: GeometryLocation
@@ -39,12 +40,15 @@ data class branchResponse(
         val lng: Double
     )
 }
-fun branchResponse.tobranchItem(): branchItem = branchItem(
+fun branchResponse.tobranchItem(): BranchItem = BranchItem(
     name = branchname,
     latLng = LatLng(latitude.toDouble(), longitude.toDouble()),
     branchId= branchid,
     address = address,
     zipCode = zipcode,
     faxNo = faxno,
-    teleNo = telno
+    teleNo = telno,
+    dist = distanceToCenter,
+    safetyBox = safety_box,
+    isfx = isfx
 )

@@ -1,15 +1,17 @@
 package com.example.atry.contract
 
-import com.example.atry.atm.AtmItem
-import com.example.atry.branch.branchItem
+import com.example.atry.atm.AtmRequest
+import com.example.atry.branch.BrRequest
 
 interface ContractMap {
     interface IPresenter2{
-        fun getData(serviceSelect:String?)
+        fun getDataSimple(serviceSelect:String?,lng:Double,lat:Double)
+        fun getDataBr(brRequest: BrRequest)
+        fun getDataAtm(atmRequest: AtmRequest)
     }
     interface IView2{
-        fun onSuccessBr(responseBody:MutableList<branchItem>)
-        fun onSuccessAtm(responseBody: MutableList<AtmItem>)
+        //fun onSuccessBr(responseBody:MutableList<branchItem>)
+        fun onSuccess(responseBody: MutableList<Any>)
         fun onFail(message:String)
     }
 }
