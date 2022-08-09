@@ -52,11 +52,12 @@ class FilterDialogBank(context:Context) : Dialog(context){
             }
         }
     }
-    fun reset(checkArray: Array<Boolean>){
+    fun reset(checkArray: Array<Boolean>,range:Double){
         if(checkArray.isNotEmpty()) {
             binding.SwiftCode.isChecked = checkArray[0]
             binding.DepositBox.isChecked = checkArray[1]
         }
+        binding.slider.value=range.toFloat()
     }
     interface IOnCancelListener {
         fun onCancel(dialog: FilterDialogBank?)

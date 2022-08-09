@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -59,14 +60,12 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     private lateinit var binding: ActivityMapBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var presenter: ContractMap.IPresenter2
-    private lateinit var locationManager: LocationManager
-    private lateinit var commandStr: String
     private lateinit var filterDialogAtm: FilterDialogAtm
     var backupAtm = hashMapOf<String, Boolean>()
     var backupBr = arrayOf<Boolean>()
     private lateinit var filterDialogBank: FilterDialogBank
-    public val MY_PERMISSION_ACCESS_COARSE_LOCATION = 11
-    public val MY_PERMISSION_ACCESS_FINE_LOCATION = 11
+    private var atmRange=1.0
+    private var brRange=5.0
 
     //localhost:80/BM/find/25.038536533061507/121.56911953097298/0.2
     private val bankIcon: BitmapDescriptor by lazy {
@@ -85,14 +84,13 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     private lateinit var ServiceSelect: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("create")
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         window.sharedElementsUseOverlay = true
 
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        filterDialogBank = FilterDialogBank(this)
-        filterDialogAtm = FilterDialogAtm(this)
         binding.toolbar.title = "國泰服務站"
         binding.toolbar.setNavigationIcon(R.drawable.ic_keyboard_arrow_left_24dp)
         binding.toolbar.setNavigationOnClickListener {
@@ -158,9 +156,15 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                 box.putSerializable("list", passList)
                 val intent = Intent(this@Map, DetailAtm::class.java)
                 intent.putExtra("list", box)
-                val nameView = view.findViewById<View>(R.id.name)
-                val phoneView = view.findViewById<View>(R.id.phone)
-                val addrView = view.findViewById<View>(R.id.addr)
+                /*val navigation=view.findViewById<View>(R.id.navigation)
+                navigation.setOnClickListener {
+                    val intent: Intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?" + "saddr=" + myLat.toDouble() + "," + myLng.toDouble() + "&daddr=" + item.latLng.longitude + "," + item.latLng.latitude + "&avoid=highway" + "&language=zh-CN")
+                    )
+                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity")
+                    startActivity(intent)
+                }*/
                 /*val activityOptions=ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this@Map,
                     Pair(nameView, name_const),
@@ -201,26 +205,14 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
         ServiceSelect = intent.getStringExtra("service").toString()
-        commandStr = LocationManager.NETWORK_PROVIDER
-        getMyPosition()
-        locationManager.requestLocationUpdates(commandStr, 1000, 0f, object : LocationListener {
-            override fun onLocationChanged(p0: Location) {
-                println(p0.longitude)
-                println(p0.latitude)
-            }
-        })
-        var location = locationManager.getLastKnownLocation(commandStr)
-        if (location != null) {
-            myLng = location.longitude
-            myLat = location.latitude
-            presenter.getDataSimple(ServiceSelect, myLng, myLat)
-        }
-
+        presenter.getDataSimple(ServiceSelect, myLng, myLat)
         binding.progressBar.visibility = View.VISIBLE
+
     }
 
     override fun onResume() {
         super.onResume()
+        println("resume")
         /*backupAtm = hashMapOf<String, Boolean>()
         backupBr = arrayOf<Boolean>()*/
         val displayMetrics: DisplayMetrics = this.resources.displayMetrics
@@ -243,61 +235,19 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         /*data.extras.let 取得bundle*/
+        println("result")
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            if (ServiceSelect == "ATM") {
-                binding.progressBar.visibility = View.VISIBLE
-                presenter.getDataAtm(
-                    atmRequest =
-                    AtmRequest(
-                        25.038835000,
-                        121.568656000,
-                        filterDialogAtm.findViewById<Slider>(R.id.slider).value.toDouble(),
-                        "0",
-                        "0",
-                        ipass = if (backupAtm["iPass"] == true) "1" else "0",
-                        visionimpaired = if (backupAtm["visionImpaired"] == true) "1" else "0",
-                        cardless = if (backupAtm["cardLess"] == true) "1" else "0",
-                        qrcode = if (backupAtm["qrCode"] == true) "1" else "0",
-                        coin = if (backupAtm["coin"] == true) "1" else "0",
-                        face = if (backupAtm["face"] == true) "1" else "0"
-                    )
-                )
-            } else {
-                binding.progressBar.visibility = View.VISIBLE
-                presenter.getDataBr(
-                    brRequest = BrRequest(
-                        25.038835000,
-                        121.568656000,
-                        filterDialogBank.findViewById<Slider>(R.id.slider).value.toDouble(),
-                        safety_box = if (backupBr[1]) "Y" else "",
-                        isfx = if (backupBr[0]) "Y" else ""
-                    )
-                )
-            }
-        }
-    }
-
-    fun getMyPosition() {
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                MY_PERMISSION_ACCESS_FINE_LOCATION
-            )
+            //回來要做的事
         }
     }
 
 
     private fun showDialog() {
         if (ServiceSelect == "ATM") {
+            filterDialogAtm = FilterDialogAtm(this)
+            filterDialogAtm.show()
+            filterDialogAtm.hide()
+            filterDialogAtm.reset(backupAtm,atmRange)
             filterDialogAtm
                 .setConfirm(object : FilterDialogAtm.IOnConfirmListener {
                     override fun onConfirm(checkArray: HashMap<String, Boolean>) {
@@ -306,8 +256,8 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         presenter.getDataAtm(
                             atmRequest =
                             AtmRequest(
-                                25.038835000,
-                                121.568656000,
+                                myLat,
+                                myLng,
                                 filterDialogAtm.findViewById<Slider>(R.id.slider).value.toDouble(),
                                 "0",
                                 "0",
@@ -320,17 +270,21 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                             )
                         )
                         backupAtm = checkArray
-                        filterDialogAtm.hide()
+                        atmRange=filterDialogAtm.findViewById<Slider>(R.id.slider).value.toDouble()
+                        filterDialogAtm.dismiss()
                     }
                 })
                 .setCancel(object : FilterDialogAtm.IOnCancelListener {
                     override fun onCancel(dialog: FilterDialogAtm?) {
-                        filterDialogAtm.reset(backupAtm)
-                        filterDialogAtm.hide()
+                        filterDialogAtm.dismiss()
                     }
                 }).show()
             filterDialogAtm.setCancelable(false)
         } else {
+            filterDialogBank = FilterDialogBank(this)
+            filterDialogBank.show()
+            filterDialogBank.hide()
+            filterDialogBank.reset(backupBr,brRange)
             filterDialogBank
                 .setConfirm(object : FilterDialogBank.IOnConfirmListener {
                     override fun onConfirm(checkArray: Array<Boolean>) {
@@ -338,21 +292,21 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         binding.progressBar.visibility = View.VISIBLE
                         presenter.getDataBr(
                             brRequest = BrRequest(
-                                25.038835000,
-                                121.568656000,
+                                myLat,
+                                myLng,
                                 filterDialogBank.findViewById<Slider>(R.id.slider).value.toDouble(),
                                 safety_box = if (checkArray[1]) "Y" else "",
                                 isfx = if (checkArray[0]) "Y" else ""
                             )
                         )
                         backupBr = checkArray
-                        filterDialogBank.hide()
+                        brRange= filterDialogBank.findViewById<Slider>(R.id.slider).value.toDouble()
+                        filterDialogBank.dismiss()
                     }
                 })
                 .setCancel(object : FilterDialogBank.IOnCancelListener {
                     override fun onCancel(dialog: FilterDialogBank?) {
-                        filterDialogBank.reset(backupBr)
-                        filterDialogBank.hide()
+                        filterDialogBank.dismiss()
                     }
                 }).show()
             filterDialogBank.setCancelable(false)
@@ -449,7 +403,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         AtmItem(
                             "您的位置",
                             "",
-                            LatLng(25.038835000, 121.568656000),
+                            LatLng(myLat, myLng),
                             "",
                             "",
                             "",
@@ -471,10 +425,11 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                 else -> {
                     branchAdapter.mList = responseBody.toMutableList() as MutableList<BranchItem>
                     branchAdapter.notifyDataSetChanged()
+                    println("change")
                     val now =
                         BranchItem(
                             "您的位置",
-                            LatLng(25.038835000, 121.568656000),
+                            LatLng(myLat, myLng),
                             "",
                             "",
                             "",
@@ -497,7 +452,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             val now =
                 BranchItem(
                     "您的位置",
-                    LatLng(25.038835000, 121.568656000),
+                    LatLng(myLat, myLng),
                     "",
                     "",
                     "",

@@ -38,7 +38,6 @@ class AtmAdapter() :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var animation: Animation = AnimationUtils.loadAnimation(holder.itemView.context,android.R.anim.slide_in_left)
         mList?.let{
-
             val itemsViewModel = it[position]
             holder.setData(itemsViewModel,position)
         }
@@ -70,7 +69,7 @@ class AtmAdapter() :
             name.text = "("+data.branchId+")"+data.name
             phone.text = data.kindname
             addr.text = data.address
-            dist.text= "距離："+data.dist.toString()+" km"
+            dist.text= "距離："+if(data.dist!! >1.0)data.dist.toString()+" 公里" else (data.dist*1000).toString()+" 公尺"
             itemView.setOnClickListener {
                 listener.onItemClick(data,itemView)
             }

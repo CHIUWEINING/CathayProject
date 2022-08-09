@@ -70,7 +70,7 @@ class BranchAdapter() :
             name.text = "("+data.branchId+")"+data.name
             phone.text = "電話："+data.teleNo
             addr.text = "("+data.zipCode+")"+data.address
-            dist.text= "距離："+data.dist.toString()+" km"
+            dist.text= "距離："+if(data.dist!! >=1.0)data.dist.toString()+" 公里" else (data.dist*1000).toString()+" 公尺"
             itemView.setOnClickListener {
                 listener.onItemClick(data,itemView)
             }

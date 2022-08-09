@@ -79,6 +79,13 @@ class DetailBank : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+    override fun onBackPressed() {
+        val intent=Intent()
+        /*val bundle1=Bundle()
+        bundle1.putString("test",test)
+        intent.putExtras(bundle1)*/
+        setResult(Activity.RESULT_OK,intent)
+        finish()
+    }
 
 }
