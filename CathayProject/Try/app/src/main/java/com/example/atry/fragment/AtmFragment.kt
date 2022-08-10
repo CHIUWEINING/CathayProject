@@ -10,9 +10,11 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.example.atry.*
+import com.example.atry.Map
 import com.example.atry.contract.ContractAtm
 import com.example.atry.databinding.FragmentAtmBinding
 import com.example.atry.presenter.PresenterAtm
+import com.google.android.material.snackbar.Snackbar
 
 
 class AtmFragment : Fragment(), ContractAtm.IViewAtm {
@@ -51,19 +53,23 @@ class AtmFragment : Fragment(), ContractAtm.IViewAtm {
         }
         binding.buttonAssure.setDoneImage(R.drawable.ic_check_24dp)
         binding.buttonAssure.setOnClickListener {
-            binding.buttonAssure.startAnimation()
-            Handler().postDelayed({
-                binding.buttonAssure.doneLoadingAnimation()
-            },1000)
-            Handler().postDelayed({
-                (activity as? Home)?.run {
-                    goTest(
-                        TYPE.ATM.toString(),
-                        binding.spinnerDistrict.selectedItem.toString(),
-                        binding.spinnerCounty.selectedItem.toString()
-                    )
-                }
-            },1500)
+            if (Map.myLat != null && Map.myLng!=null) {
+                binding.buttonAssure.startAnimation()
+                Handler().postDelayed({
+                    binding.buttonAssure.doneLoadingAnimation()
+                }, 1000)
+                Handler().postDelayed({
+                    (activity as? Home)?.run {
+                        goTest(
+                            TYPE.ATM.toString(),
+                            binding.spinnerDistrict.selectedItem.toString(),
+                            binding.spinnerCounty.selectedItem.toString()
+                        )
+                    }
+                }, 1500)
+            }else{
+                Snackbar.make(binding.root,"正在取得您的位置 請稍候",Snackbar.LENGTH_LONG).show()
+            }
         }
 
     }

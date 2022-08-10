@@ -17,10 +17,13 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.atry.atm.AtmItem
 import com.example.atry.atm.AtmRequest
@@ -53,14 +56,15 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
         const val phone_const = "phone"
         const val addr_const = "addr"
         var loading = true
-        var myLng by Delegates.notNull<Double>()
-        var myLat by Delegates.notNull<Double>()
+        var myLng:Double?=null
+        var myLat:Double?=null
     }
 
     private lateinit var binding: ActivityMapBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var presenter: ContractMap.IPresenter2
     private lateinit var filterDialogAtm: FilterDialogAtm
+    private lateinit var myGoogleMap:GoogleMap
     var backupAtm = hashMapOf<String, Boolean>()
     var backupBr = arrayOf<Boolean>()
     private lateinit var filterDialogBank: FilterDialogBank
@@ -81,6 +85,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
     }
     private val branchAdapter = BranchAdapter()
     private val atmAdapter = AtmAdapter()
+    private var markerList= mutableListOf<Marker>()
     private lateinit var ServiceSelect: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,35 +113,40 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
         branchAdapter.setOnItemCLickListener(object : BranchAdapter.onItemClickListener {
             override fun onItemClick(item: BranchItem, view: View) {
                 println(item)
-                var passList = hashMapOf(
-                    "name" to "(" + item.branchId + ")" + item.name,
-                    "addr" to "(" + item.zipCode + ")" + item.address,
-                    "phone" to "電話：" + item.teleNo,
-                    "fax" to item.faxNo,
-                    "more1" to "保險箱：" + if (item.safetyBox == "") "無" else "有",
-                    "more2" to "指定外匯分行：" + if (item.isfx == "") "無" else "有",
-                    "myLng" to myLng.toString(),
-                    "myLat" to myLat.toString(),
-                    "endLng" to item.latLng.longitude.toString(),
-                    "endLat" to item.latLng.latitude.toString()
-                )
-                val box = Bundle()
-                box.putSerializable("list", passList)
-                val intent = Intent(this@Map, DetailBank::class.java)
-                intent.putExtra("list", box)
-                view.transitionName = "share_element_container"
-                val options = ActivityOptions.makeSceneTransitionAnimation(
-                    this@Map,
-                    view,
-                    "share_element_container"
-                )
-                startActivityForResult(intent, 1, options.toBundle())
+                markerList.forEach {
+                    val myItem=it.tag as BranchItem
+                    if(item.name==myItem.name && item.address==myItem.address && item.latLng==myItem.latLng){
+                        //move Camera
+                        myGoogleMap.moveCamera(
+                            (CameraUpdateFactory.newLatLngZoom(
+                                item.latLng,
+                                17f
+                            ))
+                        )
+                        it.showInfoWindow()
+                        bottomSheetBehavior.state=BottomSheetBehavior.STATE_HALF_EXPANDED
+                    }
+                }
             }
         })
 
         atmAdapter.setOnItemCLickListener(object : AtmAdapter.onItemClickListener {
             override fun onItemClick(item: AtmItem, view: View) {
-                var passList = hashMapOf(
+                markerList.forEach {
+                    val myItem=it.tag as AtmItem
+                    if(item.sno==myItem.sno){
+                        //move Camera
+                        myGoogleMap.moveCamera(
+                            (CameraUpdateFactory.newLatLngZoom(
+                                item.latLng,
+                                17f
+                            ))
+                        )
+                        it.showInfoWindow()
+                        bottomSheetBehavior.state=BottomSheetBehavior.STATE_HALF_EXPANDED
+                    }
+                }
+                /*var passList = hashMapOf(
                     "name" to "(" + item.branchId + ")" + item.name,
                     "addr" to item.address,
                     "kindname" to item.kindname,
@@ -155,7 +165,9 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                 val box = Bundle()
                 box.putSerializable("list", passList)
                 val intent = Intent(this@Map, DetailAtm::class.java)
-                intent.putExtra("list", box)
+                intent.putExtra("list", box)*/
+
+
                 /*val navigation=view.findViewById<View>(R.id.navigation)
                 navigation.setOnClickListener {
                     val intent: Intent = Intent(
@@ -171,13 +183,16 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                     Pair(phoneView, phone_const),
                     Pair(addrView, addr_const)
                     )*/
-                view.transitionName = "share_element_container"
+
+
+
+                /*view.transitionName = "share_element_container"
                 val options = ActivityOptions.makeSceneTransitionAnimation(
                     this@Map,
                     view,
                     "share_element_container"
                 )
-                startActivityForResult(intent, 1, options.toBundle())
+                startActivityForResult(intent, 1, options.toBundle())*/
             }
         })
         presenter = PresenterMap(this)
@@ -194,18 +209,24 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             override fun onStateChanged(bottomSheet: View, state: Int) {
                 when (state) {
                     BottomSheetBehavior.STATE_HIDDEN -> {}
-                    BottomSheetBehavior.STATE_EXPANDED -> {}
-                    BottomSheetBehavior.STATE_COLLAPSED -> {}
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.persistentBottomSheet.dist.visibility=View.VISIBLE
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.persistentBottomSheet.dist.visibility=View.INVISIBLE
+                    }
                     BottomSheetBehavior.STATE_DRAGGING -> {}
                     BottomSheetBehavior.STATE_SETTLING -> {}
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {}
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        binding.persistentBottomSheet.dist.visibility=View.VISIBLE
+                    }
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
         ServiceSelect = intent.getStringExtra("service").toString()
-        presenter.getDataSimple(ServiceSelect, myLng, myLat)
+        presenter.getDataSimple(ServiceSelect, myLng!!, myLat!!)
         binding.progressBar.visibility = View.VISIBLE
 
     }
@@ -256,8 +277,8 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         presenter.getDataAtm(
                             atmRequest =
                             AtmRequest(
-                                myLat,
-                                myLng,
+                                myLat!!,
+                                myLng!!,
                                 filterDialogAtm.findViewById<Slider>(R.id.slider).value.toDouble(),
                                 "0",
                                 "0",
@@ -292,8 +313,8 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         binding.progressBar.visibility = View.VISIBLE
                         presenter.getDataBr(
                             brRequest = BrRequest(
-                                myLat,
-                                myLng,
+                                myLat!!,
+                                myLng!!,
                                 filterDialogBank.findViewById<Slider>(R.id.slider).value.toDouble(),
                                 safety_box = if (checkArray[1]) "Y" else "",
                                 isfx = if (checkArray[0]) "Y" else ""
@@ -317,6 +338,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
 
     private fun <T> addMarkers(googleMap: GoogleMap, responseBody: MutableList<T>) {
         googleMap.clear()
+        markerList.clear()
         responseBody.forEach { item ->
             when (item) {
                 is AtmItem -> {
@@ -341,6 +363,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         // Set place as the tag on the marker object so it can be referenced within
                         // MarkerInfoWindowAdapter
                         marker?.tag = item
+                        markerList.add(marker!!)
                     }
                 }
                 is BranchItem -> {
@@ -355,6 +378,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         // Set place as the tag on the marker object so it can be referenced within
                         // MarkerInfoWindowAdapter
                         marker?.tag = item
+                        marker?.showInfoWindow()
                     } else {
                         val marker = googleMap.addMarker(
                             MarkerOptions()
@@ -363,6 +387,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bank_map))
                         )
                         marker?.tag = item
+                        markerList.add(marker!!)
                     }
                 }
             }
@@ -370,22 +395,83 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                 it.tag?.let {
                     when (it) {
                         is AtmItem -> {
-                            var layoutManager =
-                                binding.persistentBottomSheet.recyclerview.layoutManager as LinearLayoutManager
-                            atmAdapter.mList?.forEachIndexed { id, item ->
-                                if (item.name == it.name && item.address == it.address) {
-                                    layoutManager.scrollToPositionWithOffset(id, 0)
+                            var count=0
+                            var passList = hashMapOf(
+                                "name" to "(" + it.branchId + ")" + it.name,
+                                "addr" to it.address,
+                                "kindname" to it.kindname,
+                                "phone" to it.teleNo,
+                                "more1" to "QRCode:" + if (it.qrCode == "0") "無" else "有",
+                                "more2" to "一卡通服務:" + if (it.iPass == "0") "無" else "有",
+                                "more3" to "零錢服務:" + if (it.coin == "0") "無" else "有",
+                                "more4" to "無卡提款：" + if (it.cardLess == "0") "無" else "有",
+                                "more5" to "視障服務：" + if (it.visionImpaired == "0") "無" else "有",
+                                "more6" to "人臉辨識：" + if (it.face == "0") "無" else "有",
+                                "myLng" to myLng.toString(),
+                                "myLat" to myLat.toString(),
+                                "endLng" to it.latLng.longitude.toString(),
+                                "endLat" to it.latLng.latitude.toString()
+                            )
+                            val box = Bundle()
+                            box.putSerializable("list", passList)
+                            val intent = Intent(this@Map, DetailAtm::class.java)
+                            intent.putExtra("list", box)
+                            markerList.forEachIndexed { index, marker ->
+                                val markerInfoWindowAdapter=MarkerInfoWindowAdapter(this,2)
+                                val view=markerInfoWindowAdapter.getInfoContents(marker)
+                                if(marker.position==it.latLng  && count==0){
+                                    count++
+                                    val nameView=view?.findViewById<TextView>(R.id.text_view_title)
+                                    val addrView=view?.findViewById<TextView>(R.id.text_view_address)
+                                    val options= ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                        this@Map,
+                                        Pair(nameView, name_const),
+                                        Pair(addrView, addr_const)
+                                    )
+                                    startActivityForResult(intent, 1,options.toBundle())
                                 }
                             }
                         }
                         is BranchItem -> {
-                            var layoutManager =
+                            var count=0
+                            var passList = hashMapOf(
+                                "name" to "(" + it.branchId + ")" + it.name,
+                                "addr" to "(" + it.zipCode + ")" + it.address,
+                                "phone" to "電話：" + it.teleNo,
+                                "fax" to it.faxNo,
+                                "more1" to "保險箱：" + if (it.safetyBox == "") "無" else "有",
+                                "more2" to "指定外匯分行：" + if (it.isfx == "") "無" else "有",
+                                "myLng" to myLng.toString(),
+                                "myLat" to myLat.toString(),
+                                "endLng" to it.latLng.longitude.toString(),
+                                "endLat" to it.latLng.latitude.toString()
+                            )
+                            val box = Bundle()
+                            box.putSerializable("list", passList)
+                            val intent = Intent(this@Map, DetailBank::class.java)
+                            intent.putExtra("list", box)
+                            markerList.forEachIndexed { index, marker ->
+                                val markerInfoWindowAdapter=MarkerInfoWindowAdapter(this,1)
+                                val view=markerInfoWindowAdapter.getInfoContents(marker)
+                                if(marker.position==it.latLng && count==0){
+                                    count++
+                                    val nameView=view?.findViewById<TextView>(R.id.text_view_title)
+                                    val addrView=view?.findViewById<TextView>(R.id.text_view_address)
+                                    val options= ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                        this@Map,
+                                        Pair(nameView, name_const),
+                                        Pair(addrView, addr_const)
+                                    )
+                                    startActivityForResult(intent, 1,options.toBundle())
+                                }
+                            }
+                            /*var layoutManager =
                                 binding.persistentBottomSheet.recyclerview.layoutManager as LinearLayoutManager
                             branchAdapter.mList?.forEachIndexed { id, item ->
                                 if (item.name == it.name && item.address == it.address) {
                                     layoutManager.scrollToPositionWithOffset(id, 0)
                                 }
-                            }
+                            }*/
                         }
                     }
                 }
@@ -403,7 +489,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                         AtmItem(
                             "您的位置",
                             "",
-                            LatLng(myLat, myLng),
+                            LatLng(myLat!!, myLng!!),
                             "",
                             "",
                             "",
@@ -429,7 +515,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
                     val now =
                         BranchItem(
                             "您的位置",
-                            LatLng(myLat, myLng),
+                            LatLng(myLat!!, myLng!!),
                             "",
                             "",
                             "",
@@ -452,7 +538,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             val now =
                 BranchItem(
                     "您的位置",
-                    LatLng(myLat, myLng),
+                    LatLng(myLat!!, myLng!!),
                     "",
                     "",
                     "",
@@ -474,6 +560,7 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
         (supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment)?.run {
             getMapAsync { googleMap ->
                 //addMarkers(googleMap)
+                myGoogleMap=googleMap
                 googleMap.setInfoWindowAdapter(MarkerInfoWindowAdapter(this@Map, 1))
                 addMarkers(googleMap, responseBody)
 
