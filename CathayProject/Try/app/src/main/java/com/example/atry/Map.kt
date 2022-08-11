@@ -553,9 +553,11 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
             }
             Snackbar.make(
                 binding.root,
-                "抱歉！我們無法找到符合您需求的服務據點。\n您可嘗試減少限制或將增加搜尋範圍",
+                "無法找到符合您需求的服務據點\n請嘗試減少限制或擴大搜尋範圍",
                 Snackbar.LENGTH_LONG
-            ).show()
+            ).setAction("我知道了"){
+                    it.visibility=View.GONE
+                }.show()
         }
         (supportFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment)?.run {
             getMapAsync { googleMap ->
@@ -601,6 +603,10 @@ class Map : AppCompatActivity(), ContractMap.IView2 {
 
     override fun onFail(message: String) {
         Log.d("MainActivity3", "onFailure$message")
-        Snackbar.make(binding.root, "無法取得相關資料，請稍後再試。", Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.root, "無法取得相關資料，請稍後再試。", Snackbar.LENGTH_LONG)
+            .setAction("我知道了"){
+                it.visibility=View.GONE
+            }
+            .show()
     }
 }

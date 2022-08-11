@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="15dp"
-        android:text="*按照距離排序"
+        android:text="*按照距離由近到遠排序"
         android:textColor="@color/light_gray"
         android:visibility="invisible"/>
 

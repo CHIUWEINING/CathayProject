@@ -68,7 +68,11 @@ class AtmFragment : Fragment(), ContractAtm.IViewAtm {
                     }
                 }, 1500)
             }else{
-                Snackbar.make(binding.root,"正在取得您的位置 請稍候",Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root,"正在取得您的位置 請稍候",Snackbar.LENGTH_LONG)
+                    .setAction("我知道了"){
+                        it.visibility=View.GONE
+                    }
+                    .show()
             }
         }
 
