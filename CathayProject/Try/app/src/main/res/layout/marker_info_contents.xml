@@ -5,7 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    style="@style/MaterialComponent">
 
     <TextView
         android:id="@+id/text_view_title"
@@ -14,7 +15,8 @@
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        tools:text="Title"/>
+        tools:text="Title"
+        style="@style/MaterialComponent"/>
 
     <TextView
         android:id="@+id/text_view_address"
@@ -22,6 +24,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="16sp"
-        tools:text="123 Main Street"/>
+        tools:text="123 Main Street"
+        style="@style/MaterialComponent"/>
 
 </LinearLayout>

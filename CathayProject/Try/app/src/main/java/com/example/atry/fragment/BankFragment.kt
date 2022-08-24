@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.atry.*
+import com.example.atry.Map
 import com.example.atry.contract.ContractBank
 import com.example.atry.databinding.FragmentBankBinding
 import com.example.atry.presenter.PresenterBank
+import com.google.android.material.snackbar.Snackbar
 
 
 class BankFragment : Fragment(), ContractBank.IViewAtm{
@@ -48,19 +50,27 @@ class BankFragment : Fragment(), ContractBank.IViewAtm{
         }
         binding.buttonAssure.setDoneImage(R.drawable.ic_check_24dp)
         binding.buttonAssure.setOnClickListener {
-            binding.buttonAssure.startAnimation()
-            Handler().postDelayed({
-                binding.buttonAssure.doneLoadingAnimation()
-            },1000)
-            Handler().postDelayed({
-                (activity as? Home)?.run {
-                    goTest(
-                        TYPE.BANK.toString(),
-                        binding.spinnerDistrict.selectedItem.toString(),
-                        binding.spinnerCounty.selectedItem.toString()
-                    )
-                }
-            },1500)
+            if (Map.myLat != null && Map.myLng != null) {
+                binding.buttonAssure.startAnimation()
+                Handler().postDelayed({
+                    binding.buttonAssure.doneLoadingAnimation()
+                }, 1000)
+                Handler().postDelayed({
+                    (activity as? Home)?.run {
+                        goTest(
+                            TYPE.BANK.toString(),
+                            binding.spinnerDistrict.selectedItem.toString(),
+                            binding.spinnerCounty.selectedItem.toString()
+                        )
+                    }
+                }, 1500)
+            } else{
+                Snackbar.make(binding.root,"正在取得您的位置 請稍候", Snackbar.LENGTH_LONG)
+                    .setAction("我知道了"){
+                        it.visibility=View.GONE
+                    }
+                    .show()
+            }
         }
     }
 

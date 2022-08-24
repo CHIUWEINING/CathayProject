@@ -15,10 +15,6 @@ class FilterDialogAtm(context:Context) : Dialog(context){
     private var cancelListener: IOnCancelListener? = null
     private var confirmListener: IOnConfirmListener? = null
 
-    fun setMessage(message: String?): FilterDialogAtm {
-        this.message = message
-        return this
-    }
 
     fun setConfirm(Listener: IOnConfirmListener): FilterDialogAtm {
         this.confirmListener = Listener
@@ -51,6 +47,7 @@ class FilterDialogAtm(context:Context) : Dialog(context){
                         ,"face" to binding.face.isChecked
                     )
                     it.onConfirm(checkArray)
+                    dismiss()
                 }
             }
             R.id.Cancel -> {
@@ -60,13 +57,14 @@ class FilterDialogAtm(context:Context) : Dialog(context){
             }
         }
     }
-    fun reset(checkArray: HashMap<String, Boolean>){
+    fun reset(checkArray: HashMap<String, Boolean>,range:Double){
         binding.Coin.isChecked=checkArray["coin"]==true
         binding.face.isChecked=checkArray["face"]==true
         binding.visionImpaired.isChecked=checkArray["visionImpaired"]==true
         binding.iPass.isChecked=checkArray["iPass"]==true
         binding.cardLess.isChecked=checkArray["cardLess"]==true
         binding.QRCode.isChecked=checkArray["qrCode"]==true
+        binding.slider.value=range.toFloat()
     }
     interface IOnCancelListener {
         fun onCancel(dialog: FilterDialogAtm?)

@@ -87,12 +87,12 @@
         app:layout_constraintGuide_percent="0.18" />
 
     <ImageView
-        android:id="@+id/bankIcon"
+        android:id="@+id/atmIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline27"
         app:layout_constraintStart_toStartOf="@+id/guideline32"
-        app:srcCompat="@drawable/bank" />
+        app:srcCompat="@drawable/atm" />
 
     <ImageView
         android:id="@+id/addrIcon"
@@ -252,7 +252,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.68" />
+        app:layout_constraintGuide_percent="0.69" />
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"

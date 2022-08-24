@@ -7,11 +7,10 @@ import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.Window
+
 import android.widget.Toast
+import androidx.core.view.ViewCompat.setTransitionName
 import com.example.atry.databinding.ActivityDetailBankBinding
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 
 
 class DetailBank : AppCompatActivity() {
@@ -22,46 +21,21 @@ class DetailBank : AppCompatActivity() {
     private lateinit var endLng:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         binding = ActivityDetailBankBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        findViewById<View>(android.R.id.content).transitionName = "share_element_container"
-        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        val test = "test1212"
         var list = intent.getBundleExtra("list")?.getSerializable("list") as HashMap<String, String>
         myLat=list["myLat"]!!
         myLng=list["myLng"]!!
         endLat=list["endLat"]!!
         endLng=list["endLng"]!!
         binding.phone.text = list["phone"]
-        binding.faxNo.text = if(list["faxNo"]==null) "本行無此服務" else "傳真："+list["faxNo"]
+        binding.faxNo.text = if(list["fax"]==null) "本行無此服務" else "傳真："+list["fax"]
         binding.name.text = list["name"]
         binding.addr.text = if(list["addr"]?.length!! <=18)list["addr"] else list["addr"]?.substring(0,17)+"\n"+list["addr"]?.substring(17)
         binding.more1.text= list["more1"]
         binding.more2.text= list["more2"]
-        /*binding.test.setOnClickListener {
-            val bundle1 = Bundle()
-            bundle1.putString("test", test)
-            val intent = Intent()
-            intent.putExtras(bundle1)
-            setResult(Activity.RESULT_OK, intent)
-            finish()
-        }*/
-        /* setTransitionName(binding.name,Map.name_const)
-         setTransitionName(binding.phone,Map.phone_const)
-         setTransitionName(binding.addr,Map.addr_const)*/
-        window.sharedElementEnterTransition =
-            com.google.android.material.transition.platform.MaterialContainerTransform()
-                .apply {
-                    duration = 1000
-                    addTarget(android.R.id.content)
-                }
-        window.sharedElementReturnTransition =
-            com.google.android.material.transition.platform.MaterialContainerTransform()
-                .apply {
-                    duration = 1000
-                    addTarget(android.R.id.content)
-                }
+        setTransitionName(binding.name, Map.name_const)
+        setTransitionName(binding.addr, Map.addr_const)
         val animationDrawable = binding.constraintLayout.background as AnimationDrawable
         animationDrawable.setEnterFadeDuration(2000)
         animationDrawable.setExitFadeDuration(4000)
@@ -90,6 +64,13 @@ class DetailBank : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+    override fun onBackPressed() {
+        val intent=Intent()
+        /*val bundle1=Bundle()
+        bundle1.putString("test",test)
+        intent.putExtras(bundle1)*/
+        setResult(Activity.RESULT_OK,intent)
+        finish()
+    }
 
 }

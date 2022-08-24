@@ -6,12 +6,10 @@ import android.content.Intent
 import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat.setTransitionName
 import com.example.atry.databinding.ActivityDetailAtmBinding
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 
 
 class DetailAtm : AppCompatActivity() {
@@ -22,12 +20,11 @@ class DetailAtm : AppCompatActivity() {
     private lateinit var endLng:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+        //window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         binding = ActivityDetailAtmBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        findViewById<View>(android.R.id.content).transitionName="share_element_container"
-        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        val test="test1212"
+        //findViewById<View>(android.R.id.content).transitionName="share_element_container"
+        //setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         var list= intent.getBundleExtra("list")?.getSerializable("list") as HashMap<String,String>
         myLat=list["myLat"]!!
         myLng=list["myLng"]!!
@@ -51,19 +48,18 @@ class DetailAtm : AppCompatActivity() {
             setResult(Activity.RESULT_OK,intent)
             finish()
         }*/
-        /* setTransitionName(binding.name,Map.name_const)
-         setTransitionName(binding.phone,Map.phone_const)
-         setTransitionName(binding.addr,Map.addr_const)*/
-        window.sharedElementEnterTransition = com.google.android.material.transition.platform.MaterialContainerTransform()
+        setTransitionName(binding.name,Map.name_const)
+        setTransitionName(binding.addr,Map.addr_const)
+        /*window.sharedElementEnterTransition = com.google.android.material.transition.platform.MaterialContainerTransform()
             .apply {
-                duration = 1000
+                duration = 3000
                 addTarget(android.R.id.content)
             }
         window.sharedElementReturnTransition = com.google.android.material.transition.platform.MaterialContainerTransform()
             .apply {
-                duration = 1000
+                duration = 3000
                 addTarget(android.R.id.content)
-            }
+            }*/
         val animationDrawable = binding.constraintLayout.background as AnimationDrawable
         animationDrawable.setEnterFadeDuration(2000)
         animationDrawable.setExitFadeDuration(4000)
@@ -91,6 +87,15 @@ class DetailAtm : AppCompatActivity() {
             intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity")
             startActivity(intent)
         }
+    }
+
+    override fun onBackPressed() {
+        val intent=Intent()
+        /*val bundle1=Bundle()
+        bundle1.putString("test",test)
+        intent.putExtras(bundle1)*/
+        setResult(Activity.RESULT_OK,intent)
+        finish()
     }
 
 
