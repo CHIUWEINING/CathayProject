@@ -1,5 +1,5 @@
 # Cathay United Bank Service Base Project
-## This a project done during 2022 Cathay Intern Program
+## This is a project done during 2022 Cathay Intern Program
 ## Description
 ### The goal of this project is to extend the inherent functions of original service base page. This is the front-end part of this Android App.
 ## Technique
